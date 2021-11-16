@@ -1,29 +1,26 @@
 package com.p2pmessenger.server;
 
-import com.mongodb.client.*;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
 import java.rmi.server.*;
 import java.rmi.*;
+import com.p2pmessenger.client.Client_Interface;
+import java.util.ArrayList;
 
-public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInterface {
+public class P2PServerImpl extends UnicastRemoteObject {
+
+    private DAOUsers daoUsers;
+    private ArrayList<Client_Interface> onlineClientList;
 
     // constructor
     public P2PServerImpl() throws RemoteException {
         try {
-
-            //Conexion a la base de datos
-            ConnectionString connectionString = new ConnectionString("mongodb+srv://dbadmin:rZ9vnPsmch3T7z7R@p2puserdatabase.lzdps.mongodb.net/p2pdb?retryWrites=true&w=majority");
-            MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).build();
-            MongoClient mongoClient = MongoClients.create(settings);
-            MongoDatabase database = mongoClient.getDatabase("p2pdb");
-
-            System.out.println("Conectado a base de datos: " + database.getCollection("users").countDocuments());
-
-            mongoClient.close();
+            daoUsers = new DAOUsers();
+            onlineClientList = new ArrayList<>();
 
         } catch (Exception e) {
-            System.out.println("Error al conectar con la base de datos " + e.toString());
+            System.out.println("Error al inicializar el servidor" + e.toString());
         }
     }
+
+
+    
 }

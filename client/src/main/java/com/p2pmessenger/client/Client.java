@@ -38,12 +38,12 @@ public class Client {
             Usuario u=new Usuario(nick,contr,callbackObj);
             if(op.equals("a")){
                 //Registro conexión cliente
-                s.registrarConexion(callbackObj);
+                //s.registrarConexion(callbackObj);
 
             }
             else if (op.equals("b")){
                 //Registro novo usuario
-                s.registrarUsuario(callbackObj);
+                //s.registrarUsuario(callbackObj);
 
             }
             else{
