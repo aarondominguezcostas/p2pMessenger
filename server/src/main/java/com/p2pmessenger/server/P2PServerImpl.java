@@ -18,7 +18,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             MongoClient mongoClient = MongoClients.create(settings);
             MongoDatabase database = mongoClient.getDatabase("p2pdb");
 
-            System.out.println("Conectado a base de datos: " + database.getName());
+            System.out.println("Conectado a base de datos: " + database.getCollection("users").countDocuments());
 
             mongoClient.close();
 

@@ -1,0 +1,13 @@
+{   
+    "title": "Users info",
+    "description": "Este documento guarda informacio de los usuarios",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "A unique identifier for an employee",
+            "type": "string",
+            "required": true,
+            "unique": true
+        }
+    }
+}
