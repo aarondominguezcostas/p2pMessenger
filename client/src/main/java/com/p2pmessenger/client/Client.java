@@ -1,6 +1,7 @@
 package com.p2pmessenger.client;
 import java.io.*;
 import java.rmi.*;
+import com.p2pmessenger.server.P2PServerInterface;
 
 public class Client {
     
@@ -19,7 +20,7 @@ public class Client {
             RMIPort = Integer.parseInt(portNum); 
             String registryURL = "rmi://localhost:" + portNum + "/callback";
             //Busco servidor
-            //Descomentar cando haxa esas clases-> CallbackServerInterface s =(CallbackServerInterface)Naming.lookup(registryURL);
+            P2PServerInterface s =(P2PServerInterface)Naming.lookup(registryURL);
             System.out.println("Lookup completed " );
             //Creo clientecallback
             Client_Interface callbackObj= new Client_Impl();
