@@ -23,4 +23,12 @@ public class UserModel {
         return usr;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
 }

@@ -5,7 +5,7 @@ import java.rmi.*;
 
 public interface P2PServerInterface extends Remote {
 
-    public void login(Client_Interface cliente, String id, String contraseña) throws java.rmi.RemoteException;
+    public boolean login(Client_Interface cliente, String id, String contraseña) throws java.rmi.RemoteException;
 
     // Método para registrarse na aplicación
     public void signin(Client_Interface cliente, String id, String contraseña) throws java.rmi.RemoteException;
@@ -17,8 +17,7 @@ public interface P2PServerInterface extends Remote {
      * que o solicitante é quen dice ser. Non sei se será necesario enviar a
      * interface cliente, xa que poderíase buscar solo por id
      */
-    void solicitarAmistad(String idDestinatario, Client_Interface cliente, String id, String contraseña)
-            throws java.rmi.RemoteException;
+    void solicitarAmistad(String idDestinatario, Client_Interface cliente) throws java.rmi.RemoteException;
 
     // Método para actualizar unha solicitud de amistad no server
     /*
