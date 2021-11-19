@@ -22,7 +22,7 @@ public class UserModel {
         }
     }
 
-    public void setPendingFriends(ArrayList<String> pendingFriends){
+    public void setPendingFriends(ArrayList<String> pendingFriends) {
         for (String pendingFriend : pendingFriends) {
             this.pendingFriends.add(pendingFriend);
         }
@@ -43,10 +43,15 @@ public class UserModel {
         return password;
     }
 
-    //toString method
+    public ArrayList<String> getFriends() {
+        return friends;
+    }
+
+    // toString method
     @Override
     public String toString() {
-        return "UserModel{" + "username=" + username + ", password=" + password + ", friends=" + friends + ", pendingFriends=" + pendingFriends + '}';
+        return "UserModel{" + "username=" + username + ", password=" + password + ", friends=" + friends
+                + ", pendingFriends=" + pendingFriends + '}';
     }
 
 }

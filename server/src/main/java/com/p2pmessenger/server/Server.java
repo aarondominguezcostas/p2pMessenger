@@ -23,9 +23,9 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        //añadimos el listener para el caso de que se cierre la aplicacion
+        // añadimos el listener para el caso de que se cierre la aplicacion
         Runtime.getRuntime().addShutdownHook(new DBkiller());
-        
+
         String registryURL;
         try {
             startRegistry(1099);

@@ -11,6 +11,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 public class DAOUsers {
     private MongoCollection<Document> collection;
     private MongoClient mongoClient;
@@ -30,8 +31,8 @@ public class DAOUsers {
     public UserModel getUserByUsername(String username) {
         Document userDoc = (Document) collection.find(new Document("username", username)).first();
         UserModel user = new UserModel(userDoc.getString("username"), userDoc.getString("password"));
-        user.setFriends((ArrayList<String>)(userDoc.get("friendList")));
-        user.setPendingFriends((ArrayList<String>)(userDoc.get("pendingFriend")));
+        user.setFriends((ArrayList<String>) (userDoc.get("friendList")));
+        user.setPendingFriends((ArrayList<String>) (userDoc.get("pendingFriend")));
         return user;
     }
 
@@ -54,8 +55,8 @@ public class DAOUsers {
     // list
     public void addFriendPetition(String username1, String username2) {
 
-        //todo: check if user1 is already in user2 pendingFriends or in friends list
-        //check that both exist
+        // todo: check if user1 is already in user2 pendingFriends or in friends list
+        // check that both exist
         Bson filter = (eq("username", username2));
         Bson updateOperation = push("pendingFriend", username1);
         UpdateOptions options = new UpdateOptions().upsert(true);
@@ -73,15 +74,14 @@ public class DAOUsers {
         Bson updateOperation = push("friendList", username1);
         UpdateOptions options = new UpdateOptions().upsert(true);
         collection.updateOne(filter, updateOperation, options);
-    
+
         Bson filter2 = eq("username", username1);
         Bson updateOperation2 = push("friendList", username2);
         collection.updateOne(filter2, updateOperation2, options);
 
     }
 
-
-    //close database connection
+    // close database connection
     public void closeDb() {
         this.mongoClient.close();
     }
