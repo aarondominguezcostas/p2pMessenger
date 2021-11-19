@@ -16,6 +16,18 @@ public class UserModel {
         this.pendingFriends = new ArrayList<String>();
     }
 
+    public void setFriends(ArrayList<String> friends) {
+        for (String friend : friends) {
+            this.friends.add(friend);
+        }
+    }
+
+    public void setPendingFriends(ArrayList<String> pendingFriends){
+        for (String pendingFriend : pendingFriends) {
+            this.pendingFriends.add(pendingFriend);
+        }
+    }
+
     public Document toDocument() {
         Document usr = new Document();
         usr.append("username", this.username);
@@ -29,6 +41,12 @@ public class UserModel {
 
     public String getPassword() {
         return password;
+    }
+
+    //toString method
+    @Override
+    public String toString() {
+        return "UserModel{" + "username=" + username + ", password=" + password + ", friends=" + friends + ", pendingFriends=" + pendingFriends + '}';
     }
 
 }
