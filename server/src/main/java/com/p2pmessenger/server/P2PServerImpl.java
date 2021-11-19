@@ -16,13 +16,15 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             daoUsers = new DAOUsers();
             onlineClientList = new HashMap<>();
 
+            daoUsers.acceptFriendRequest("test2","test");
+
         } catch (Exception e) {
             System.out.println("Error al inicializar el servidor" + e.toString());
         }
     }
 
     @Override
-    public boolean login(Client_Interface cliente, String id, String password) throws RemoteException {
+    public synchronized boolean login(Client_Interface cliente, String id, String password) throws RemoteException {
         try{
             boolean isValid = this.daoUsers.passwordCorrect(id, password);
             if(isValid) {
@@ -58,6 +60,10 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     public void aceptarSolicitud(String idAceptante, String idSolicitante) throws RemoteException {
         // TODO Auto-generated method stub
         
+    }
+
+    public void shutdown(){
+        this.daoUsers.closeDb();
     }
 
 }

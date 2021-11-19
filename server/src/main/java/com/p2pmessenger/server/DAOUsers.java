@@ -5,21 +5,30 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
 import org.bson.*;
-
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.json.JsonWriterSettings;
+import com.mongodb.client.model.FindOneAndUpdateOptions;
+import com.mongodb.client.model.ReturnDocument;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.UpdateResult;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.*;
 public class DAOUsers {
     private MongoCollection<Document> collection;
+    private MongoClient mongoClient;
 
     public DAOUsers() {
         // Conexion a la base de datos
         ConnectionString connectionString = new ConnectionString(
                 "mongodb+srv://dbadmin:rZ9vnPsmch3T7z7R@p2puserdatabase.lzdps.mongodb.net/p2pdb?retryWrites=true&w=majority");
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).build();
-        MongoClient mongoClient = MongoClients.create(settings);
+        mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("p2pdb");
         collection = database.getCollection("users");
 
         System.out.println("Conectado a base de datos: " + collection.countDocuments());
-        mongoClient.close();
     }
 
     public UserModel getUserByUsername(String username) {
@@ -28,7 +37,7 @@ public class DAOUsers {
     }
 
     public void addUser(UserModel user) {
-        Document userDoc = new Document().append("username", user.getUsername()).append("password", user.getPassword());
+        Document userDoc = user.toDocument();
         collection.insertOne(userDoc);
     }
 
@@ -45,13 +54,24 @@ public class DAOUsers {
     // user 1 wants to add user 2 as friend -> add user 1 to user 2 pendingFriends
     // list
     public void addFriendPetition(String username1, String username2) {
-        Document userDoc = (Document) collection.find(new Document("username", username2)).first();
+
+        //todo: check if user1 is already in user2 pendingFriends or in friends list
+        //check that both exist
+        Bson filter = (eq("username", username2));
+        Bson updateOperation = push("pendingFriend", username1);
+        UpdateOptions options = new UpdateOptions().upsert(true);
+        collection.updateOne(filter, updateOperation, options);
     }
 
     // accept friend request: user2 accepts user1 -> add user1 to user2 firends list
     // & viceversa
     public void acceptFriendRequest(String username1, String username2) {
-        Document userDoc = (Document) collection.find(new Document("username", username2)).first();
+        Bson filter = eq("username", username2);
+        Bson update1 = pull("pendingFriend", username1);
+        collection.findOneAndUpdate(filter, update1);
+    }
 
+    public void closeDb() {
+        this.mongoClient.close();
     }
 }

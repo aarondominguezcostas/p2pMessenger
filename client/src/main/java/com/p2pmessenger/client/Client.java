@@ -18,7 +18,7 @@ public class Client {
             System.out.println("Enter the RMIregistry port number:");
             String portNum = br.readLine();
             RMIPort = Integer.parseInt(portNum); 
-            String registryURL = "rmi://localhost:" + portNum + "/callback";
+            String registryURL = "rmi://localhost:" + portNum + "/mainServer";
             //Busco servidor
             P2PServerInterface s =(P2PServerInterface)Naming.lookup(registryURL);
             System.out.println("Lookup completed " );
