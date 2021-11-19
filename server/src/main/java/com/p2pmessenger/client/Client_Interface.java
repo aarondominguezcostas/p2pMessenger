@@ -9,7 +9,7 @@ public interface Client_Interface extends java.rmi.Remote {
     public void newOnlineFriend(String username, Client_Interface cliente) throws java.rmi.RemoteException;
 
     // Notificar cliente desconectado
-    public void NovaDesconexion(Usuario u) throws java.rmi.RemoteException;
+    public void newOfflineFriend(String username, Client_Interface cliente) throws java.rmi.RemoteException;
 
     // Creación de cliente necesitará chamar ao servidor para registrarse--->podemos
     // devolver
