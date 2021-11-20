@@ -47,6 +47,10 @@ public class UserModel {
         return friends;
     }
 
+    public ArrayList<String> getPendingFriends() {
+        return pendingFriends;
+    }
+
     // toString method
     @Override
     public String toString() {

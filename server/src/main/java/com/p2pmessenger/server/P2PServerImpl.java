@@ -18,6 +18,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             daoUsers = new DAOUsers();
             onlineClientList = new HashMap<>();
             usersInfo = new ArrayList<>();
+            this.daoUsers.addFriendPetition("admin", "admin2");
         } catch (Exception e) {
             System.out.println("Error al inicializar el servidor" + e.toString());
         }
@@ -44,9 +45,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public synchronized void signin(Client_Interface cliente, String id, String contraseña) throws RemoteException {
         try {
-            UserModel user = new UserModel(id, contraseña);
-            this.daoUsers.addUser(user);
-            this.onlineClientList.put(id, cliente);
+
         } catch (Exception e) {
             System.out.println("Error al registrar usuario: " + e.toString());
         }
@@ -54,7 +53,9 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
 
     @Override
     public synchronized void solicitarAmistad(String idDestinatario, Client_Interface cliente) throws RemoteException {
-        // TODO Auto-generated method stub
+        if(this.onlineClientList.containsKey(idDestinatario)){
+
+        }
 
     }
 
@@ -67,12 +68,15 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public synchronized void logout(Client_Interface cliente, String id) throws RemoteException {
         try {
-            //todo
+            this.onlineClientList.remove(id);
+            this.usersInfo.remove(daoUsers.getUserByUsername(id));
+            this.updateOfflineList(id, cliente);
         } catch (Exception e) {
             System.out.println("Error al cerrar sesion: " + e.toString());
         }
     }
 
+    //cierra la conexion a la base de datos
     public void shutdown() {
         this.daoUsers.closeDb();
     }
@@ -94,7 +98,15 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     // itera por todos los clientes cuando un cliente se desconecta y avisa a todos
     // sus amigos de que se ha desconectado
     private void updateOfflineList(String username, Client_Interface client){
-
+        try {
+            for (UserModel user : this.usersInfo) {
+                if (user.getFriends().contains(username)) {
+                    this.onlineClientList.get(user.getUsername()).newOfflineFriend(username, client);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error al actualizar la lista de usuarios online: " + e.toString());
+        }
     }
 
 }
