@@ -14,9 +14,11 @@ public interface P2PServerInterface extends Remote {
     public void logout(Client_Interface cliente, String id) throws java.rmi.RemoteException;
 
     // Método para enviar una solicitud de amistad
-    void solicitarAmistad(String idDestinatario, Client_Interface cliente) throws java.rmi.RemoteException;
+    void solicitarAmistad(String idDestinatario, Client_Interface cliente, String idCliente)
+            throws java.rmi.RemoteException;
 
     // Método para actualizar unha solicitud de amistad no server
-    public void aceptarSolicitud(String idAceptante, Client_Interface cliente) throws java.rmi.RemoteException;
+    public void aceptarSolicitud(String idAceptante, Client_Interface cliente, String idAceptado)
+            throws java.rmi.RemoteException;
 
 }

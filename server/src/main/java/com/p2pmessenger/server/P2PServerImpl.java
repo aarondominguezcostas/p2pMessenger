@@ -45,23 +45,39 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public synchronized void signin(Client_Interface cliente, String id, String contraseña) throws RemoteException {
         try {
-
+            UserModel user = this.daoUsers.getUserByUsername(id);
+            if (user != null) {
+                this.daoUsers.addUser(new UserModel(id, contraseña));
+                this.usersInfo.add(daoUsers.getUserByUsername(id));
+                this.onlineClientList.put(id, cliente);
+            }
         } catch (Exception e) {
             System.out.println("Error al registrar usuario: " + e.toString());
         }
     }
 
     @Override
-    public synchronized void solicitarAmistad(String idDestinatario, Client_Interface cliente) throws RemoteException {
-        if(this.onlineClientList.containsKey(idDestinatario)){
-
+    public synchronized void solicitarAmistad(String idDestinatario, Client_Interface cliente, String idCliente)
+            throws RemoteException {
+        try {
+            if (this.onlineClientList.get(idCliente).equals(cliente)) {
+                this.daoUsers.addFriendPetition(idCliente, idDestinatario);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al solicitar amistad: " + e.toString());
         }
-
     }
 
     @Override
-    public synchronized void aceptarSolicitud(String idAceptante, Client_Interface cliente) throws RemoteException {
-        // TODO Auto-generated method stub
+    public synchronized void aceptarSolicitud(String idAceptante, Client_Interface cliente, String idAceptado)
+            throws RemoteException {
+        try {
+            if (this.onlineClientList.get(idAceptante).equals(cliente)) {
+                this.daoUsers.acceptFriendRequest(idAceptante, idAceptado);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al aceptar solicitud: " + e.toString());
+        }
 
     }
 
@@ -76,7 +92,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         }
     }
 
-    //cierra la conexion a la base de datos
+    // cierra la conexion a la base de datos
     public void shutdown() {
         this.daoUsers.closeDb();
     }
@@ -97,7 +113,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
 
     // itera por todos los clientes cuando un cliente se desconecta y avisa a todos
     // sus amigos de que se ha desconectado
-    private void updateOfflineList(String username, Client_Interface client){
+    private void updateOfflineList(String username, Client_Interface client) {
         try {
             for (UserModel user : this.usersInfo) {
                 if (user.getFriends().contains(username)) {
