@@ -2,6 +2,8 @@ package com.p2pmessenger.client;
 import java.io.*;
 import java.rmi.*;
 import com.p2pmessenger.server.P2PServerInterface;
+import com.p2pmessenger.gui.Log_in;
+import com.p2pmessenger.gui.Registrarse;
 
 public class Client {
     
@@ -31,19 +33,21 @@ public class Client {
             String nick,contr;
             System.out.println("(a)Iniciar Sesión\n(b)Registrarse");
             String op=br.readLine();
-            System.out.println("Introduzca el nombre de usuario:");
-            nick=br.readLine();
+            //System.out.println("Introduzca el nombre de usuario:");
+            /*nick=br.readLine();
             System.out.println("Introduzca la contraseña:");
-            contr=br.readLine();
-            Usuario u=new Usuario(nick,contr,callbackObj);
+            contr=br.readLine();*/
+            //Usuario u=new Usuario(nick,contr,callbackObj);
+
             if(op.equals("a")){
                 //Registro conexión cliente
                 //s.registrarConexion(callbackObj);
+                Log_in vlogin=new Log_in(null,s,callbackObj);
+                vlogin.setVisible(true);
 
             }
             else if (op.equals("b")){
-                //Registro novo usuario
-                //s.registrarUsuario(callbackObj);
+                Registrarse vr= new Registrarse(null,s, callbackObj);
 
             }
             else{
