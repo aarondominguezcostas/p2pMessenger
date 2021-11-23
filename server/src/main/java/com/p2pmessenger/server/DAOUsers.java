@@ -44,9 +44,9 @@ public class DAOUsers {
         } else {
             user.setFriends(new ArrayList<String>());
         }
-        if (userDoc.get("pendingFriends") != null) {
+        if (userDoc.get("pendingFriend") != null) {
             user.setPendingFriends(new ArrayList<String>(Arrays
-                    .asList(userDoc.get("pendingFriends").toString().replace("[", "").replace("]", "").split(","))));
+                    .asList(userDoc.get("pendingFriend").toString().replace("[", "").replace("]", "").split(","))));
         } else {
             user.setPendingFriends(new ArrayList<String>());
         }
