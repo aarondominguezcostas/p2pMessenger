@@ -32,7 +32,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user.getPassword().equals(password)) {
                 this.updateOnlineList(id, cliente);
-                this.usersInfo.add(daoUsers.getUserByUsername(id));
+                this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
 
                 return true;
@@ -51,7 +51,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user == null) {
                 this.daoUsers.addUser(new UserModel(id, contraseña));
-                this.usersInfo.add(daoUsers.getUserByUsername(id));
+                this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
                 return true;
             } else {
@@ -113,6 +113,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     public synchronized ArrayList<String> getSolicitudesPendientes(Client_Interface cliente, String idCliente)
             throws RemoteException {
         for (UserModel user : this.usersInfo) {
+            System.out.println(user.getUsername());
             if (user.getUsername().equals(idCliente)) {
                 System.out.println("Solicitudes pendientes: " + user.getPendingFriends().toString());
                 return user.getPendingFriends();
