@@ -62,6 +62,8 @@ public class Client {
             System.out.println("Error en callback client");
         }
     }
+
+    /*
     public static void enviarMensaje(String mensaje,Usuario u){
         try {
             u.getClient().recibirMensaje(mensaje);
@@ -76,4 +78,5 @@ public class Client {
     public static void desconectarse(Usuario u){
         //chamar ao servidor para desconectarse e pasarlle o meu usuario
     }
+    */
 }

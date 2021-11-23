@@ -24,6 +24,8 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         }
     }
 
+    /// METODOS INTERFAZ REMOTA ///
+
     @Override
     public synchronized boolean login(Client_Interface cliente, String id, String password) throws RemoteException {
         try {
@@ -43,16 +45,20 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     }
 
     @Override
-    public synchronized void signin(Client_Interface cliente, String id, String contraseña) throws RemoteException {
+    public synchronized boolean signin(Client_Interface cliente, String id, String contraseña) throws RemoteException {
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user != null) {
                 this.daoUsers.addUser(new UserModel(id, contraseña));
                 this.usersInfo.add(daoUsers.getUserByUsername(id));
                 this.onlineClientList.put(id, cliente);
+                return true;
+            }else{
+                return false;
             }
         } catch (Exception e) {
             System.out.println("Error al registrar usuario: " + e.toString());
+            return false;
         }
     }
 
@@ -62,6 +68,11 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         try {
             if (this.onlineClientList.get(idCliente).equals(cliente)) {
                 this.daoUsers.addFriendPetition(idCliente, idDestinatario);
+
+                //actualizar informacion de los usuarios
+                this.updateUserInfo(idCliente);
+                this.updateUserInfo(idDestinatario);
+
             }
         } catch (Exception e) {
             System.out.println("Error al solicitar amistad: " + e.toString());
@@ -74,6 +85,11 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         try {
             if (this.onlineClientList.get(idAceptante).equals(cliente)) {
                 this.daoUsers.acceptFriendRequest(idAceptante, idAceptado);
+
+                //actualizar informacion de los usuarios
+                this.updateUserInfo(idAceptante);
+                this.updateUserInfo(idAceptado);
+                
             }
         } catch (Exception e) {
             System.out.println("Error al aceptar solicitud: " + e.toString());
@@ -91,6 +107,21 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             System.out.println("Error al cerrar sesion: " + e.toString());
         }
     }
+
+    @Override
+    public ArrayList<String> getSolicitudesPendientes(Client_Interface cliente, String idCliente)
+            throws RemoteException {
+        if(this.onlineClientList.get(idCliente).equals(cliente)){
+            for(UserModel user : this.usersInfo){
+                if(user.getUsername().equals(idCliente)){
+                    return user.getPendingFriends();
+                }
+            }
+        }
+        return null;
+    }
+
+    /// METODOS AUXILIARES ///
 
     // cierra la conexion a la base de datos
     public void shutdown() {
@@ -125,4 +156,12 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         }
     }
 
+    private void updateUserInfo(String username){
+        for(UserModel user : this.usersInfo){
+            if(user.getUsername().equals(username)){
+                user = this.daoUsers.getUserByUsername(username);
+                break;
+            }
+        }
+    }
 }

@@ -6,15 +6,17 @@ import java.util.ArrayList;
 
 public class Client_Impl extends UnicastRemoteObject implements Client_Interface{
     
+    private ArrayList<Usuario> amigosconectados;
+
     protected Client_Impl() throws RemoteException {
         super();
     }
 
-    private ArrayList<Usuario> amigosconectados;
     //Recibir mensaje
-    public void recibirMensaje(String s) throws java.rmi.RemoteException{
+    public void recibirMensaje(String s, Client_Interface cliente) throws java.rmi.RemoteException{
         System.out.println("Mensaje: "+s);
     }
+    
     //Método que permite ao servidor notificar ao cliente a conexión de un novo cliente
     public void NovaConexion(Usuario u) throws java.rmi.RemoteException{
         amigosconectados.add(u);
@@ -29,5 +31,16 @@ public class Client_Impl extends UnicastRemoteObject implements Client_Interface
 
     public void RecibirSolicitudAmistad(Usuario u) throws java.rmi.RemoteException{
 
+    }
+
+    @Override
+    public void newOnlineFriend(String username, Client_Interface cliente) throws RemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void newOfflineFriend(String username, Client_Interface cliente) throws RemoteException {
+        // TODO Auto-generated method stub
+        
     }
 }
