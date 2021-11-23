@@ -112,12 +112,10 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public synchronized ArrayList<String> getSolicitudesPendientes(Client_Interface cliente, String idCliente)
             throws RemoteException {
-        if (this.onlineClientList.get(idCliente).equals(cliente)) {
-            for (UserModel user : this.usersInfo) {
-                if (user.getUsername().equals(idCliente)) {
-                    System.out.println("Solicitudes pendientes: " + user.getPendingFriends().toString());
-                    return user.getPendingFriends();
-                }
+        for (UserModel user : this.usersInfo) {
+            if (user.getUsername().equals(idCliente)) {
+                System.out.println("Solicitudes pendientes: " + user.getPendingFriends().toString());
+                return user.getPendingFriends();
             }
         }
         return null;
