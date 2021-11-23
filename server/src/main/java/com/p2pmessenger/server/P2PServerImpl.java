@@ -49,7 +49,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     public synchronized boolean signin(Client_Interface cliente, String id, String contraseña) throws RemoteException {
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
-            if (user != null) {
+            if (user == null) {
                 this.daoUsers.addUser(new UserModel(id, contraseña));
                 this.usersInfo.add(daoUsers.getUserByUsername(id));
                 this.onlineClientList.put(id, cliente);
