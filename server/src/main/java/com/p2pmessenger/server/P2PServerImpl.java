@@ -114,6 +114,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             throws RemoteException {
         for (UserModel user : this.usersInfo) {
             System.out.println(user.getUsername());
+            System.out.println(user.toString());
             if (user.getUsername().equals(idCliente)) {
                 System.out.println("Solicitudes pendientes: " + user.getPendingFriends().toString());
                 return user.getPendingFriends();
