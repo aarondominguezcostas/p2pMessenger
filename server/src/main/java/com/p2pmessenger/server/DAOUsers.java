@@ -29,8 +29,15 @@ public class DAOUsers {
     }
 
     public UserModel getUserByUsername(String username) {
+
         Document userDoc = (Document) collection.find(new Document("username", username)).first();
+
+        if (userDoc == null) {
+            return null;
+        }
+
         UserModel user = new UserModel(userDoc.getString("username"), userDoc.getString("password"));
+
         if(userDoc.get("friends") != null) {
             user.setFriends(new ArrayList<String>(Arrays.asList(userDoc.get("friends").toString().split(","))));
         }else{
