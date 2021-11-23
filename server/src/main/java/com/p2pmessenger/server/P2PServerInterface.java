@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public interface P2PServerInterface extends Remote {
 
+    //metodo para iniciar sesion en la aplicacion
     public boolean login(Client_Interface cliente, String id, String contraseña) throws java.rmi.RemoteException;
 
     // Método para registrarse na aplicación
@@ -23,7 +24,7 @@ public interface P2PServerInterface extends Remote {
     public void aceptarSolicitud(String idAceptante, Client_Interface cliente, String idAceptado)
             throws java.rmi.RemoteException;
 
-        // Método para enviar un mensaje
+    // Método para obtener todas las solicitudes de amistad pendientes
     public ArrayList<String> getSolicitudesPendientes(Client_Interface cliente, String idCliente) throws java.rmi.RemoteException;
 
     //metodo para obtener todos los amigos en linea
