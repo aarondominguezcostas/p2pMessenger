@@ -1,5 +1,6 @@
 package com.p2pmessenger.client;
 
+
 public interface Client_Interface extends java.rmi.Remote {
     // Recibir mensaje
     public void recibirMensaje(String s) throws java.rmi.RemoteException;

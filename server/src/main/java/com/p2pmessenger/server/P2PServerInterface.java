@@ -3,6 +3,7 @@ package com.p2pmessenger.server;
 import com.p2pmessenger.client.Client_Interface;
 import java.rmi.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface P2PServerInterface extends Remote {
 
@@ -24,5 +25,8 @@ public interface P2PServerInterface extends Remote {
 
         // Método para enviar un mensaje
     public ArrayList<String> getSolicitudesPendientes(Client_Interface cliente, String idCliente) throws java.rmi.RemoteException;
+
+    //metodo para obtener todos los amigos en linea
+    public HashMap<String, Client_Interface> getAmigosOnline(Client_Interface cliente, String idCliente) throws java.rmi.RemoteException;
 
 }
