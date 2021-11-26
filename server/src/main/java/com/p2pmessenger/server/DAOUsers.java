@@ -40,13 +40,13 @@ public class DAOUsers {
 
         if (userDoc.get("friendList") != null) {
             user.setFriends(new ArrayList<String>(
-                    Arrays.asList(userDoc.get("friendList").toString().replace("[", "").replace("]", "").split(","))));
+                    Arrays.asList(userDoc.get("friendList").toString().replace("[", "").replace("]", "").replaceAll("\\s+","").split(","))));
         } else {
             user.setFriends(new ArrayList<String>());
         }
         if (userDoc.get("pendingFriend") != null) {
             user.setPendingFriends(new ArrayList<String>(Arrays
-                    .asList(userDoc.get("pendingFriend").toString().replace("[", "").replace("]", "").split(","))));
+                    .asList(userDoc.get("pendingFriend").toString().replace("[", "").replace("]", "").replaceAll("\\s+","").split(","))));
         } else {
             user.setPendingFriends(new ArrayList<String>());
         }
@@ -74,15 +74,24 @@ public class DAOUsers {
 
         // todo: check if user1 is already in user2 pendingFriends or in friends list
         // check that both exist
-        if (userExists(username1) && userExists(username2)) {
-            if (getUserByUsername(username1).getPendingFriends().contains(username2)) {
-                System.out.println("User " + username1 + " already has a pending friend request from " + username2);
-            } else if (getUserByUsername(username2).getFriends().contains(username1)) {
-                System.out.println("User " + username2 + " already has " + username1 + " as friend");
-            } else {
-                collection.updateOne(eq("username", username1), combine(set("pendingFriend", Arrays.asList(username2))),
+        UserModel user1 = getUserByUsername(username1);
+        UserModel user2 = getUserByUsername(username2);
+        if (user1 != null && user2 != null) {
+            if (user2.getPendingFriends().contains(username1)) {
+                System.out.println("User " + username2 + " already has a pending friend request from " + username1);
+            } else if (user1.getFriends().contains(username2)) {
+                System.out.println("User " + username1 + " already has " + username2 + " as friend");
+            } else if (user1.getPendingFriends().contains(username2)) {
+                this.acceptFriendRequest(username2, username1);
+            }else {
+                ArrayList<String> friendsList = user2.getPendingFriends();
+                friendsList.add(username1);
+
+                collection.updateOne(eq("username", username2),
+                        combine(set("pendingFriend", friendsList)),
                         new UpdateOptions().upsert(true));
-                System.out.println("User " + username1 + " added " + username2 + " to pendingFriends list");
+                System.out.println("User " + username2 + " added " + username1 + " to pendingFriends list");
+
             }
         }
 
@@ -91,18 +100,39 @@ public class DAOUsers {
     // accept friend request: user2 accepts user1 -> add user1 to user2 firends list
     // & viceversa
     public void acceptFriendRequest(String username1, String username2) {
+        try {
 
-        Bson filter = eq("username", username2);
-        Bson update1 = pull("pendingFriend", username1);
-        collection.findOneAndUpdate(filter, update1);
+            UserModel user1 = getUserByUsername(username1);
+            UserModel user2 = getUserByUsername(username2);
 
-        Bson updateOperation = push("friendList", username1);
-        UpdateOptions options = new UpdateOptions().upsert(true);
-        collection.updateOne(filter, updateOperation, options);
+            if (user1 != null && user2 != null) {
+                if (user2.getPendingFriends().contains(username1)) {
 
-        Bson filter2 = eq("username", username1);
-        Bson updateOperation2 = push("friendList", username2);
-        collection.updateOne(filter2, updateOperation2, options);
+                    ArrayList<String> friendsListu2 = user2.getFriends();
+                    friendsListu2.add(username1);
+
+                    ArrayList<String> pendingFriendsListu2 = user2.getPendingFriends();
+                    pendingFriendsListu2.remove(username1);
+
+                    ArrayList<String> friendsListu1 = user1.getFriends();
+                    friendsListu1.add(username2);
+
+                    collection.updateOne(eq("username", username2),
+                            combine(set("friendList", friendsListu2),
+                                    set("pendingFriend", pendingFriendsListu2)),
+                            new UpdateOptions().upsert(true));
+                    collection.updateOne(eq("username", username1),
+                            combine(set("friendList", friendsListu1)),
+                            new UpdateOptions().upsert(true));
+                    System.out.println("User " + username1 + " accepted " + username2 + " friend request");
+                } else {
+                    System.out.println("User " + username1 + " does not have a friend request from " + username2);
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("No se pudo aceptar amistad");
+        }
 
     }
 

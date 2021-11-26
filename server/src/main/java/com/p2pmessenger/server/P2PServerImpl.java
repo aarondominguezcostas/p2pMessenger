@@ -18,7 +18,6 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             daoUsers = new DAOUsers();
             onlineClientList = new HashMap<>();
             usersInfo = new ArrayList<>();
-            this.daoUsers.addFriendPetition("admin", "admin2");
         } catch (Exception e) {
             System.out.println("Error al inicializar el servidor" + e.toString());
         }
@@ -84,8 +83,11 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     public synchronized void aceptarSolicitud(String idAceptante, Client_Interface cliente, String idAceptado)
             throws RemoteException {
         try {
+
             if (this.onlineClientList.get(idAceptante).equals(cliente)) {
-                this.daoUsers.acceptFriendRequest(idAceptante, idAceptado);
+
+
+                this.daoUsers.acceptFriendRequest(idAceptado, idAceptante);
 
                 // actualizar informacion de los usuarios
                 this.updateUserInfo(idAceptante);
@@ -112,15 +114,11 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public synchronized ArrayList<String> getSolicitudesPendientes(Client_Interface cliente, String idCliente)
             throws RemoteException {
-        for (UserModel user : this.usersInfo) {
-            System.out.println(user.getUsername());
-            System.out.println(idCliente);
-            System.out.println(user.getUsername().equals(idCliente));
-            if (user.getUsername().equals(idCliente)) {
-                System.out.println("Solicitudes pendientes: " + user.getPendingFriends().toString());
-                return user.getPendingFriends();
-            }
+        UserModel user = this.daoUsers.getUserByUsername(idCliente);
+        if(this.onlineClientList.get(idCliente).equals(cliente)){
+            return user.getPendingFriends();
         }
+
         return null;
     }
 
@@ -177,6 +175,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         for (UserModel user : this.usersInfo) {
             if (user.getUsername().equals(username)) {
                 user = this.daoUsers.getUserByUsername(username);
+                System.out.println("updated "+username);
                 break;
             }
         }
