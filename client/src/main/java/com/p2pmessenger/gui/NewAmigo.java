@@ -2,7 +2,7 @@ package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
 
-import com.p2pmessenger.client.Client_Interface;
+import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
 /*
@@ -20,9 +20,9 @@ public class NewAmigo extends javax.swing.JDialog {
      * Creates new form NewAmigo
      */
     private P2PServerInterface s;
-    private Client_Interface c;
+    private P2PClientInterface c;
     private String id;
-    public NewAmigo(java.awt.Frame parent,P2PServerInterface servidor,Client_Interface cliente,String idpropio) {
+    public NewAmigo(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente,String idpropio) {
         super(parent, true);
         s=servidor;
         c=cliente;

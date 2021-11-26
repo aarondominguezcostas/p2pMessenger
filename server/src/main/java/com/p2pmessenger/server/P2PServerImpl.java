@@ -2,14 +2,15 @@ package com.p2pmessenger.server;
 
 import java.rmi.server.*;
 import java.rmi.*;
-import com.p2pmessenger.client.Client_Interface;
+import com.p2pmessenger.client.P2PClientInterface;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInterface {
 
     private DAOUsers daoUsers;
-    private HashMap<String, Client_Interface> onlineClientList;
+    private HashMap<String, P2PClientInterface> onlineClientList;
     private ArrayList<UserModel> usersInfo;
 
     // constructor
@@ -26,10 +27,11 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     /// METODOS INTERFAZ REMOTA ///
 
     @Override
-    public synchronized boolean login(Client_Interface cliente, String id, String password) throws RemoteException {
+    public synchronized boolean login(P2PClientInterface cliente, String id, String password) throws RemoteException {
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user.getPassword().equals(password)) {
+                user.setUuid(UUID.randomUUID());
                 this.updateOnlineList(id, cliente);
                 this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
@@ -45,11 +47,14 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     }
 
     @Override
-    public synchronized boolean signin(Client_Interface cliente, String id, String contraseña) throws RemoteException {
+    public synchronized boolean signin(P2PClientInterface cliente, String id, String contraseña)
+            throws RemoteException {
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user == null) {
-                this.daoUsers.addUser(new UserModel(id, contraseña));
+                user = new UserModel(id, contraseña);
+                user.setUuid(UUID.randomUUID());
+                this.daoUsers.addUser(user);
                 this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
                 return true;
@@ -63,37 +68,46 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     }
 
     @Override
-    public synchronized void solicitarAmistad(String idDestinatario, Client_Interface cliente, String idCliente)
+    public synchronized void solicitarAmistad(String idDestinatario, UUID clienteId, String idCliente)
             throws RemoteException {
         try {
-            if (this.onlineClientList.get(idCliente).equals(cliente)) {
-                this.daoUsers.addFriendPetition(idCliente, idDestinatario);
-
-                // actualizar informacion de los usuarios
-                this.updateUserInfo(idCliente);
-                this.updateUserInfo(idDestinatario);
-
+            UserModel client = null;
+            for (UserModel user : this.usersInfo) {
+                if (user.getUuid().equals(clienteId)) {
+                    client = user;
+                    this.daoUsers.addFriendPetition(idCliente, idDestinatario);
+                    break;
+                }
             }
+
+            if (client != null) {
+                this.updateUserInfo(client.getUsername());
+            }
+
         } catch (Exception e) {
             System.out.println("Error al solicitar amistad: " + e.toString());
         }
     }
 
     @Override
-    public synchronized void aceptarSolicitud(String idAceptante, Client_Interface cliente, String idAceptado)
+    public synchronized void aceptarSolicitud(String idAceptante, UUID clienteId, String idAceptado)
             throws RemoteException {
         try {
 
-            if (this.onlineClientList.get(idAceptante).equals(cliente)) {
+            UserModel client = null;
 
-
-                this.daoUsers.acceptFriendRequest(idAceptado, idAceptante);
-
-                // actualizar informacion de los usuarios
-                this.updateUserInfo(idAceptante);
-                this.updateUserInfo(idAceptado);
-
+            for (UserModel user : this.usersInfo) {
+                if (user.getUuid().equals(clienteId)) {
+                    client = user;
+                    this.daoUsers.acceptFriendRequest(idAceptado, idAceptante);
+                    break;
+                }
             }
+
+            if (client != null) {
+                this.updateUserInfo(client.getUsername());
+            }
+
         } catch (Exception e) {
             System.out.println("Error al aceptar solicitud: " + e.toString());
         }
@@ -101,37 +115,61 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     }
 
     @Override
-    public synchronized void logout(Client_Interface cliente, String id) throws RemoteException {
+    public synchronized void logout(UUID clienteId, String id) throws RemoteException {
         try {
-            this.onlineClientList.remove(id);
-            this.usersInfo.remove(daoUsers.getUserByUsername(id));
+
+            UserModel client = null;
+            P2PClientInterface cliente = null;
+            for (UserModel user : this.usersInfo) {
+                if (user.getUuid().equals(clienteId)) {
+                    client = user;
+                    cliente = this.onlineClientList.get(id);
+                    this.onlineClientList.remove(id);
+                    break;
+                }
+            }
+
+            if (client != null) {
+                this.usersInfo.remove(client);
+            }
+
             this.updateOfflineList(id, cliente);
+
         } catch (Exception e) {
             System.out.println("Error al cerrar sesion: " + e.toString());
         }
     }
 
     @Override
-    public synchronized ArrayList<String> getSolicitudesPendientes(Client_Interface cliente, String idCliente)
+    public synchronized ArrayList<String> getSolicitudesPendientes(UUID clientUuid, String idCliente)
             throws RemoteException {
-        UserModel user = this.daoUsers.getUserByUsername(idCliente);
-        if(this.onlineClientList.get(idCliente).equals(cliente)){
-            return user.getPendingFriends();
+
+        for (UserModel user : this.usersInfo) {
+            if (user.getUuid().equals(clientUuid)) {
+                return user.getPendingFriends();
+            }
         }
 
         return null;
     }
 
     @Override
-    public synchronized HashMap<String, Client_Interface> getAmigosOnline(Client_Interface cliente, String id)
+    public synchronized HashMap<String, P2PClientInterface> getAmigosOnline(UUID clienteUuid, String id)
             throws RemoteException {
-        UserModel user = this.daoUsers.getUserByUsername(id);
-        HashMap<String, Client_Interface> amigosOnline = new HashMap<>();
-        for (String onlineClient : this.onlineClientList.keySet()) {
-            if (user.getFriends().contains(onlineClient)) {
-                amigosOnline.put(onlineClient, this.onlineClientList.get(onlineClient));
+
+        HashMap<String, P2PClientInterface> amigosOnline = new HashMap<>();
+        
+        for (UserModel user : this.usersInfo) {
+            if (user.getUuid().equals(clienteUuid)) {
+                for (String onlineClient : this.onlineClientList.keySet()) {
+                    if (user.getFriends().contains(onlineClient)) {
+                        amigosOnline.put(onlineClient, this.onlineClientList.get(onlineClient));
+                    }
+                }
+                break;
             }
         }
+
         return amigosOnline;
     }
 
@@ -144,7 +182,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
 
     // itera por todos los clientes, si el nuevo cliente es amigo de alguno de
     // ellos, lo avisa de que se ha conectado
-    private void updateOnlineList(String username, Client_Interface cliente) {
+    private void updateOnlineList(String username, P2PClientInterface cliente) {
         try {
             for (UserModel user : this.usersInfo) {
                 if (user.getFriends().contains(username)) {
@@ -158,7 +196,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
 
     // itera por todos los clientes cuando un cliente se desconecta y avisa a todos
     // sus amigos de que se ha desconectado
-    private void updateOfflineList(String username, Client_Interface client) {
+    private void updateOfflineList(String username, P2PClientInterface client) {
         try {
             for (UserModel user : this.usersInfo) {
                 if (user.getFriends().contains(username)) {
@@ -175,7 +213,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         for (UserModel user : this.usersInfo) {
             if (user.getUsername().equals(username)) {
                 user = this.daoUsers.getUserByUsername(username);
-                System.out.println("updated "+username);
+                System.out.println("updated " + username);
                 break;
             }
         }

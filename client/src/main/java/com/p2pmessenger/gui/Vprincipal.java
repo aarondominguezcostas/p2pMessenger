@@ -6,7 +6,7 @@ import java.util.Set;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import com.p2pmessenger.client.Client_Interface;
+import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
 /*
@@ -24,10 +24,10 @@ public class Vprincipal extends javax.swing.JFrame {
      * Creates new form principal
      */
     private P2PServerInterface s;
-    private Client_Interface c;
+    private P2PClientInterface c;
     private String id;
-    private HashMap<String,Client_Interface> amigos;
-    public Vprincipal(P2PServerInterface servidor,Client_Interface cliente,String idp) {
+    private HashMap<String,P2PClientInterface> amigos;
+    public Vprincipal(P2PServerInterface servidor,P2PClientInterface cliente,String idp) {
         initComponents();
         s=servidor;
         c=cliente;

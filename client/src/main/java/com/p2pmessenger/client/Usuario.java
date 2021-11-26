@@ -4,9 +4,9 @@ public class Usuario {
     
     private String nick;
     private String contraseña;
-    private Client_Interface client;
+    private P2PClientInterface client;
 
-    public Usuario(String nick, String contraseña, Client_Interface client) {
+    public Usuario(String nick, String contraseña, P2PClientInterface client) {
         this.nick = nick;
         this.contraseña = contraseña;
         this.client = client;
@@ -23,10 +23,10 @@ public class Usuario {
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
     }
-    public Client_Interface getClient() {
+    public P2PClientInterface getClient() {
         return client;
     }
-    public void setClient(Client_Interface client) {
+    public void setClient(P2PClientInterface client) {
         this.client = client;
     }
 }

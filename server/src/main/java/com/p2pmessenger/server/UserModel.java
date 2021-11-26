@@ -2,10 +2,13 @@ package com.p2pmessenger.server;
 
 import java.util.ArrayList;
 import org.bson.Document;
+import java.util.UUID;
+
 
 public class UserModel {
     private String username;
     private String password;
+    private UUID uniqueId;
     private ArrayList<String> friends;
     private ArrayList<String> pendingFriends;
 
@@ -14,6 +17,14 @@ public class UserModel {
         this.password = password;
         this.friends = new ArrayList<String>();
         this.pendingFriends = new ArrayList<String>();
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uniqueId=uuid;
+    }
+
+    public UUID getUuid(){
+        return this.uniqueId;
     }
 
     public void setFriends(ArrayList<String> friends) {

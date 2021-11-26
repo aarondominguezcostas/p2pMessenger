@@ -25,7 +25,7 @@ public class Client {
             P2PServerInterface s =(P2PServerInterface)Naming.lookup(registryURL);
             System.out.println("Lookup completed " );
             //Creo clientecallback
-            Client_Interface callbackObj= new Client_Impl();
+            P2PClientInterface callbackObj= new P2PClientImpl();
             
 
 
