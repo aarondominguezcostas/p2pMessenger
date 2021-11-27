@@ -27,43 +27,45 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     /// METODOS INTERFAZ REMOTA ///
 
     @Override
-    public synchronized boolean login(P2PClientInterface cliente, String id, String password) throws RemoteException {
+    public synchronized UUID login(P2PClientInterface cliente, String id, String password) throws RemoteException {
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user.getPassword().equals(password)) {
-                user.setUuid(UUID.randomUUID());
+                UUID userUUID = UUID.randomUUID();
+                user.setUuid(userUUID);
                 this.updateOnlineList(id, cliente);
                 this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
 
-                return true;
+                return userUUID;
             } else {
-                return false;
+                return null;
             }
         } catch (Exception e) {
             System.out.println("Error al iniciar sesion: " + e.toString());
-            return false;
+            return null;
         }
     }
 
     @Override
-    public synchronized boolean signin(P2PClientInterface cliente, String id, String contraseña)
+    public synchronized UUID signin(P2PClientInterface cliente, String id, String contraseña)
             throws RemoteException {
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user == null) {
+                UUID userUUID = UUID.randomUUID();
                 user = new UserModel(id, contraseña);
-                user.setUuid(UUID.randomUUID());
+                user.setUuid(userUUID);
                 this.daoUsers.addUser(user);
                 this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
-                return true;
+                return userUUID;
             } else {
-                return false;
+                return null;
             }
         } catch (Exception e) {
             System.out.println("Error al registrar usuario: " + e.toString());
-            return false;
+            return null;
         }
     }
 
@@ -158,7 +160,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             throws RemoteException {
 
         HashMap<String, P2PClientInterface> amigosOnline = new HashMap<>();
-        
+
         for (UserModel user : this.usersInfo) {
             if (user.getUuid().equals(clienteUuid)) {
                 for (String onlineClient : this.onlineClientList.keySet()) {
@@ -171,6 +173,12 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         }
 
         return amigosOnline;
+    }
+
+    @Override
+    public boolean isOnline(P2PClientInterface client, String idCliente) throws RemoteException {
+        // TODO Auto-generated method stub
+        return this.onlineClientList.get(idCliente).equals(client);
     }
 
     /// METODOS AUXILIARES ///
