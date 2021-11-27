@@ -2,6 +2,9 @@ package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
 import java.util.UUID;
+
+import javax.swing.UIManager;
+
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -24,6 +27,18 @@ public class Log_in extends javax.swing.JDialog {
     
     public Log_in(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente) {
         super(parent, false);
+        
+        try {
+            for(UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if(info.getName().equals("Nimbus")) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         s=servidor;
         c=cliente;
         initComponents();

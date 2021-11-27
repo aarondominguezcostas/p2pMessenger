@@ -28,15 +28,11 @@ public class UserModel {
     }
 
     public void setFriends(ArrayList<String> friends) {
-        for (String friend : friends) {
-            this.friends.add(friend);
-        }
+        this.friends = friends;
     }
 
     public void setPendingFriends(ArrayList<String> pendingFriends) {
-        for (String pendingFriend : pendingFriends) {
-            this.pendingFriends.add(pendingFriend);
-        }
+        this.pendingFriends = pendingFriends;
     }
 
     public Document toDocument() {

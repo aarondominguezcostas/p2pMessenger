@@ -22,13 +22,13 @@ public class NewAmigo extends javax.swing.JDialog {
     private P2PServerInterface s;
     private P2PClientInterface c;
     private String id;
-    private UUID uuid;
+    private UUID uuidCliente;
     public NewAmigo(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente,String idpropio,UUID uuid) {
         super(parent, true);
         s=servidor;
         c=cliente;
         id=idpropio;
-        uuid=uuid;
+        uuidCliente=uuid;
         initComponents();
     }
 
@@ -100,7 +100,7 @@ public class NewAmigo extends javax.swing.JDialog {
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
         // TODO add your handling code here:
         try {
-            s.solicitarAmistad(jTextField1.getText(),uuid,id);
+            s.solicitarAmistad(jTextField1.getText(),uuidCliente,id);
         } catch (RemoteException e) {
             System.out.println("Error enviando solicitudede amistad.");
         }

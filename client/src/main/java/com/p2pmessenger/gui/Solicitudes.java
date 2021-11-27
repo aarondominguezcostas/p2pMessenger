@@ -26,13 +26,13 @@ public class Solicitudes extends javax.swing.JDialog {
     private P2PServerInterface s;
     private P2PClientInterface c;
     private String id;
-    private UUID uuid;
+    private UUID uuidCliente;
     public Solicitudes(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente,String idpropio,UUID uuid) {
         super(parent, true);
         s=servidor;
         c=cliente;
         id=idpropio;
-        uuid=uuid;
+        uuidCliente=uuid;
         initComponents();
         try {
             actualizarTabla(s.getSolicitudesPendientes(uuid, id));
@@ -129,7 +129,7 @@ public class Solicitudes extends javax.swing.JDialog {
         try {
             System.out.println("Id aceptador."+this.id);
             System.out.println("Aceptado"+(String)tabla.getValueAt(tabla.getSelectedRow(), 0));
-            s.aceptarSolicitud(this.id,this.uuid,(String)tabla.getValueAt(tabla.getSelectedRow(), 0));
+            s.aceptarSolicitud(this.id,uuidCliente,(String)tabla.getValueAt(tabla.getSelectedRow(), 0));
         } catch (RemoteException e) {
             System.out.println("Error aceptando solicitud");
         }

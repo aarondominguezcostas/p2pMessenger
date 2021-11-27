@@ -29,6 +29,12 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public synchronized UUID login(P2PClientInterface cliente, String id, String password) throws RemoteException {
         try {
+
+            // verificar si el usuario ya esta online
+            if(this.onlineClientList.containsKey(id)){
+                return null;
+            }
+
             UserModel user = this.daoUsers.getUserByUsername(id);
             if (user.getPassword().equals(password)) {
                 UUID userUUID = UUID.randomUUID();
@@ -219,7 +225,9 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     private void updateUserInfo(String username) {
         for (UserModel user : this.usersInfo) {
             if (user.getUsername().equals(username)) {
-                user = this.daoUsers.getUserByUsername(username);
+                UserModel userWithNewInfo = this.daoUsers.getUserByUsername(username);
+                user.setFriends(userWithNewInfo.getFriends());
+                user.setPendingFriends(userWithNewInfo.getPendingFriends());
                 System.out.println("updated " + username);
                 break;
             }
