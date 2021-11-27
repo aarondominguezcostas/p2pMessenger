@@ -1,7 +1,7 @@
 package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
-
+import java.util.UUID;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -157,15 +157,15 @@ public class Log_in extends javax.swing.JDialog {
 
     private void Insesion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Insesion1ActionPerformed
         // TODO add your handling code here:
-        boolean lg=false;
+        UUID lg=null;
         try {
             lg = s.login(c,usuario.getText(),contr.getText());
         } catch (RemoteException e) {
             System.out.println("Error iniciando sesión");
         }
-        if(lg){
+        if(lg!= null){
             //Abro ventana de chat
-            Vprincipal vp= new Vprincipal(s,c,usuario.getText());
+            Vprincipal vp= new Vprincipal(s,c,usuario.getText(),lg);
             vp.setVisible(true);
             //Cerro esta
             this.dispose();

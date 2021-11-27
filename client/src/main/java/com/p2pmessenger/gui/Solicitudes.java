@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-
+import java.util.UUID;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -26,15 +26,17 @@ public class Solicitudes extends javax.swing.JDialog {
     private P2PServerInterface s;
     private P2PClientInterface c;
     private String id;
-    public Solicitudes(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente,String idpropio) {
+    private UUID uuid;
+    public Solicitudes(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente,String idpropio,UUID uuid) {
         super(parent, true);
         s=servidor;
         c=cliente;
         id=idpropio;
+        uuid=uuid;
         initComponents();
         try {
-            actualizarTabla(s.getSolicitudesPendientes(cliente, id));
-            System.out.println(s.getSolicitudesPendientes(cliente, id));
+            actualizarTabla(s.getSolicitudesPendientes(uuid, id));
+            System.out.println(s.getSolicitudesPendientes(uuid, id));
         } catch (RemoteException e) {
             System.out.println("Error obteniendo las solicitudes pedientes.");
         }
@@ -127,7 +129,7 @@ public class Solicitudes extends javax.swing.JDialog {
         try {
             System.out.println("Id aceptador."+this.id);
             System.out.println("Aceptado"+(String)tabla.getValueAt(tabla.getSelectedRow(), 0));
-            s.aceptarSolicitud(this.id,this.c,(String)tabla.getValueAt(tabla.getSelectedRow(), 0));
+            s.aceptarSolicitud(this.id,this.uuid,(String)tabla.getValueAt(tabla.getSelectedRow(), 0));
         } catch (RemoteException e) {
             System.out.println("Error aceptando solicitud");
         }

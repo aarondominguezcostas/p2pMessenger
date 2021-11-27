@@ -176,8 +176,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     }
 
     @Override
-    public boolean isOnline(P2PClientInterface client, String idCliente) throws RemoteException {
-        // TODO Auto-generated method stub
+    public boolean isOnlineAndCorrect(P2PClientInterface client, String idCliente) throws RemoteException {
         return this.onlineClientList.get(idCliente).equals(client);
     }
 

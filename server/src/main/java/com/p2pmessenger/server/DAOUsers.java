@@ -5,7 +5,6 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import com.mongodb.client.model.UpdateOptions;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.*;
@@ -93,7 +92,7 @@ public class DAOUsers {
                 System.out.println("User " + username2 + " added " + username1 + " to pendingFriends list");
 
             }
-        }
+        } 
 
     }
 

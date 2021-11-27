@@ -3,6 +3,7 @@ package com.p2pmessenger.gui;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.UUID;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -26,14 +27,16 @@ public class Vprincipal extends javax.swing.JFrame {
     private P2PServerInterface s;
     private P2PClientInterface c;
     private String id;
+    private UUID uuidCliente;
     private HashMap<String,P2PClientInterface> amigos;
-    public Vprincipal(P2PServerInterface servidor,P2PClientInterface cliente,String idp) {
+    public Vprincipal(P2PServerInterface servidor,P2PClientInterface cliente,String idp, UUID uuid) {
         initComponents();
         s=servidor;
         c=cliente;
         id=idp;
+        uuidCliente=uuid;
         try {
-            amigos=s.getAmigosOnline(cliente,id);
+            amigos=s.getAmigosOnline(uuidCliente,id);
             System.out.println(amigos.keySet());
         } catch (RemoteException e) {
             System.out.println("Error obteniendo la lista de amigos.");
@@ -127,13 +130,13 @@ public class Vprincipal extends javax.swing.JFrame {
     private void SolicitudesActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
         System.out.println("Chega");
-        Solicitudes vsol= new Solicitudes(this,s,c,id);
+        Solicitudes vsol= new Solicitudes(this,s,c,id,uuidCliente);
         vsol.setVisible(true);
     }                                           
 
     private void NuevoAmigoActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
-        NewAmigo na=new NewAmigo(this,s,c,id);
+        NewAmigo na=new NewAmigo(this,s,c,id,uuidCliente);
         na.setVisible(true);
     }                                          
 

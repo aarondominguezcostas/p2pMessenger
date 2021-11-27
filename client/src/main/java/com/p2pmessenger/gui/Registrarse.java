@@ -1,7 +1,7 @@
 package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
-
+import java.util.UUID;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -144,15 +144,15 @@ public class Registrarse extends javax.swing.JDialog {
         String password=contr.getText();
         if(password.equals(contr1.getText())){
             //envío petición de registro ao servidor
-            boolean sg=false;
+            UUID sg=null;
             try {
                 sg = s.signin(c,usuario.getText(),password);
             } catch (RemoteException e) {
                 System.out.println("Error registrándose.");
             }
-            if(sg){
+            if(sg!=null){
                 //correcta abro ventana de chat
-                Vprincipal vp= new Vprincipal(s,c,usuario.getText());
+                Vprincipal vp= new Vprincipal(s,c,usuario.getText(),sg);
                 vp.setVisible(true);
                 //cerro a actual
                 this.dispose();

@@ -34,6 +34,6 @@ public interface P2PServerInterface extends Remote {
             throws java.rmi.RemoteException;
 
     //metodo para comprobar que alguien esta online y su interfaz es correcta
-    public boolean isOnline(P2PClientInterface client, String idCliente) throws java.rmi.RemoteException;
+    public boolean isOnlineAndCorrect(P2PClientInterface client, String idCliente) throws java.rmi.RemoteException;
 
 }

@@ -1,7 +1,7 @@
 package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
-
+import java.util.UUID;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -22,11 +22,13 @@ public class NewAmigo extends javax.swing.JDialog {
     private P2PServerInterface s;
     private P2PClientInterface c;
     private String id;
-    public NewAmigo(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente,String idpropio) {
+    private UUID uuid;
+    public NewAmigo(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente,String idpropio,UUID uuid) {
         super(parent, true);
         s=servidor;
         c=cliente;
         id=idpropio;
+        uuid=uuid;
         initComponents();
     }
 
@@ -98,7 +100,7 @@ public class NewAmigo extends javax.swing.JDialog {
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
         // TODO add your handling code here:
         try {
-            s.solicitarAmistad(jTextField1.getText(),c,id);
+            s.solicitarAmistad(jTextField1.getText(),uuid,id);
         } catch (RemoteException e) {
             System.out.println("Error enviando solicitudede amistad.");
         }
