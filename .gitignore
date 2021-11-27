@@ -1,2 +1,10 @@
 workspace.code-workspace
+
+#
+# Visual Studio Code
+#
+.settings/
+.classpath
+.factorypath
+.project
 .vscode/
