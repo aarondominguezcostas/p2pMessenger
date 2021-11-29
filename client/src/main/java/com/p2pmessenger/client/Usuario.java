@@ -5,29 +5,14 @@ import java.util.UUID;
 
 public class Usuario {
     
-    private String nick;
-    private String contraseña;
     private P2PClientInterface client;
     private P2PServerInterface server;
     private UUID uuid;
 
-    public Usuario(String nick, String contraseña, P2PClientInterface client) {
-        this.nick = nick;
-        this.contraseña = contraseña;
+    public Usuario(P2PClientInterface client) {
         this.client = client;
     }
-    public String getNick() {
-        return nick;
-    }
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-    public String getContraseña() {
-        return contraseña;
-    }
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
+    
     public P2PClientInterface getClient() {
         return client;
     }

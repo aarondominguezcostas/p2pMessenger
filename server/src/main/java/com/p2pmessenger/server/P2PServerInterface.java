@@ -26,6 +26,10 @@ public interface P2PServerInterface extends Remote {
             throws java.rmi.RemoteException;
 
     // Método para obtener todas las solicitudes de amistad pendientes
+    public ArrayList<String> getFriends(UUID clientUuid, String idCliente)
+            throws java.rmi.RemoteException;
+
+    // Método para obtener todas las solicitudes de amistad pendientes
     public ArrayList<String> getSolicitudesPendientes(UUID clientUuid, String idCliente)
             throws java.rmi.RemoteException;
 
@@ -33,7 +37,7 @@ public interface P2PServerInterface extends Remote {
     public HashMap<String, P2PClientInterface> getAmigosOnline(UUID clientUuid, String idCliente)
             throws java.rmi.RemoteException;
 
-    //metodo para comprobar que alguien esta online y su interfaz es correcta
+    // metodo para comprobar que alguien esta online y su interfaz es correcta
     public boolean isOnlineAndCorrect(P2PClientInterface client, String idCliente) throws java.rmi.RemoteException;
 
 }

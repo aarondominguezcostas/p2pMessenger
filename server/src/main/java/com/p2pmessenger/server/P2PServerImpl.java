@@ -31,7 +31,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         try {
 
             // verificar si el usuario ya esta online
-            if(this.onlineClientList.containsKey(id)){
+            if (this.onlineClientList.containsKey(id)) {
                 return null;
             }
 
@@ -184,6 +184,19 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public boolean isOnlineAndCorrect(P2PClientInterface client, String idCliente) throws RemoteException {
         return this.onlineClientList.get(idCliente).equals(client);
+    }
+
+    // Método para obtener todas las solicitudes de amistad pendientes
+    @Override
+    public ArrayList<String> getFriends(UUID clientUuid, String idCliente)
+            throws java.rmi.RemoteException {
+                
+        for (UserModel user : this.usersInfo) {
+            if (user.getUuid().equals(clientUuid)) {
+                return user.getFriends();
+            }
+        }
+        return null;
     }
 
     /// METODOS AUXILIARES ///
