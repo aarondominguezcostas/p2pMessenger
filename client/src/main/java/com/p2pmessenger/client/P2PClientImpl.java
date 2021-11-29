@@ -15,7 +15,9 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
     //Recibir mensaje
     @Override
     public void recibirMensaje(String s, P2PClientInterface cliente) throws java.rmi.RemoteException{
-        System.out.println("Mensaje: "+s);
+        //comprobar que en los mensajes enviados del cliente esté ese mensaje.
+
+        //recibir mensaje
     }
 
     @Override
