@@ -42,12 +42,12 @@ public class Client {
             if(op.equals("a")){
                 //Registro conexión cliente
                 //s.registrarConexion(callbackObj);
-                Log_in vlogin=new Log_in(null,s,callbackObj);
+                Log_in vlogin=new Log_in(null,s,(P2PClientImpl)callbackObj);
                 vlogin.setVisible(true);
 
             }
             else if (op.equals("b")){
-                Registrarse vr= new Registrarse(null,s, callbackObj);
+                //Registrarse vr= new Registrarse(null,s, callbackObj);
 
             }
             else{

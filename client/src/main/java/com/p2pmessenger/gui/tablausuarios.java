@@ -14,10 +14,10 @@ import javax.swing.table.AbstractTableModel;
  */
 public class tablausuarios extends AbstractTableModel {
 
-    private String[] nombres;
+    private ArrayList<String> nombres;
 
-    public void ModeloTablaUsuarios(Set amigos) {
-        this.nombres=(String[]) amigos.toArray();
+    public void ModeloTablaUsuarios(ArrayList<String> amigos) {
+        this.nombres=amigos;
     }
 
     public int getColumnCount() {
@@ -26,7 +26,7 @@ public class tablausuarios extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return nombres == null ? 0 : nombres.length;
+        return nombres == null ? 0 : nombres.size();
     }
 
     @Override
@@ -49,11 +49,11 @@ public class tablausuarios extends AbstractTableModel {
 
     public Object getValueAt(int row, int col) {
         
-        return nombres[row];
+        return nombres.get(row);
     }
 
-    public void setFilas(Set amigos) {
-        this.nombres=(String[]) amigos.toArray();
+    public void setFilas(ArrayList<String> amigos) {
+        this.nombres=amigos;
         fireTableDataChanged();
     }
 }

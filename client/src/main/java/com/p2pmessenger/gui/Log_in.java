@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.swing.UIManager;
 
+import com.p2pmessenger.client.P2PClientImpl;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -23,9 +24,9 @@ public class Log_in extends javax.swing.JDialog {
      * Creates new form Log_in
      */
     private P2PServerInterface s;
-    private P2PClientInterface c;
+    private P2PClientImpl c;
     
-    public Log_in(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente) {
+    public Log_in(java.awt.Frame parent,P2PServerInterface servidor,P2PClientImpl cliente) {
         super(parent, false);
         
         try {
@@ -41,6 +42,7 @@ public class Log_in extends javax.swing.JDialog {
         
         s=servidor;
         c=cliente;
+        c.setServer(this.s);
         initComponents();
         
     }
