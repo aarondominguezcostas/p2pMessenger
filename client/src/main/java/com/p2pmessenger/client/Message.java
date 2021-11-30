@@ -1,9 +1,10 @@
 package com.p2pmessenger.client;
 
 import java.util.UUID;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Message {
+public class Message implements Serializable{
     private UUID senderUUID;
     private String message;
     private Timestamp timestamp;

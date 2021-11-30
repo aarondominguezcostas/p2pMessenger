@@ -45,13 +45,15 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
     //Recibir mensaje
     @Override
     public void recibirMensaje(Message s, P2PClientInterface cliente, String username) throws java.rmi.RemoteException{
-        /*//comprobar que en los mensajes enviados del cliente esté ese mensaje.
+        //comprobar que en los mensajes enviados del cliente esté ese mensaje.
         if(this.amigosConectados.get(username) != null && cliente.checkMessage(s)){
             //Añado o mensaje recibido ao chat
+            System.out.println("\n"+username+"\n");
+            System.out.println("\n\n"+this.chats.get(username).size()+"\n\n");
             this.chats.get(username).add(new MensajeChat(username,s.getMessage(),s.getTimestamp()));
             //notifico a ventana e ela se encarga de mostralo si o amigo seleccionado é o receptor
             window.MensajeRecibido(username, s.getMessage());
-        }*/
+        }
         //recibir mensaje
     }
 
@@ -65,10 +67,11 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
 
         if(this.server.getFriends(this.clientId,this.username).contains(username)){
             this.amigosConectados.put(username,cliente);
-            this.actualizarVistaAmigosOnline(this.getOnlineFriends());
             //Creo o chat, vacío de momento
             ArrayList<MensajeChat> c=new ArrayList<MensajeChat>();
             this.chats.put(username,c);
+            this.actualizarVistaAmigosOnline(this.getOnlineFriends());
+            
         }
         
     }
@@ -121,6 +124,14 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
 
     public ArrayList<String> getOnlineFriends() {
         try {
+            //creo chat para eles
+            for (String a : this.amigosConectados.keySet()){
+                if(this.chats.get(a)==null){
+                    //Creo o chat, vacío de momento
+                    ArrayList<MensajeChat> c=new ArrayList<MensajeChat>();
+                    this.chats.put(a,c);
+                }
+            }
             return this.amigosConectados.keySet().stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         }catch (Exception e) {
             System.out.println("Error al obtener los amigos conectados");
@@ -131,6 +142,15 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
     public void updateOnlineFriendList(){
         try{
             this.amigosConectados = this.server.getAmigosOnline(this.clientId, this.username);
+            //creo chat para eles
+            for (String a : this.amigosConectados.keySet()){
+                if(this.chats.get(a)==null){
+                    //Creo o chat, vacío de momento
+                    ArrayList<MensajeChat> c=new ArrayList<MensajeChat>();
+                    this.chats.put(a,c);
+                }
+            }
+
         }catch (Exception e){
             System.out.println("Error al obtener los amigos conectados");
         }

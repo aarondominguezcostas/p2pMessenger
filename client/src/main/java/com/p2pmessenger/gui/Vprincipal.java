@@ -191,7 +191,9 @@ public class Vprincipal extends javax.swing.JFrame {
     //Código para actualizar o chat
     public void MensajeRecibido(String emisor,String s){
         //si a columna seleccionada corresponde co mensaje recibido a actualizamos
-        if(tabla.getValueAt(tabla.getSelectedRow(),0).toString().equals(s)){
+        System.out.println(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
+        if(tabla.getValueAt(tabla.getSelectedRow(),0).toString().equals(emisor)){
+            System.out.println("AQUICHEGA");
             String m="";
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
             m=m+dtf.format(LocalDateTime.now());
