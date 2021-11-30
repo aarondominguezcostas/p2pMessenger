@@ -29,6 +29,8 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         this.server = server;
     }
 
+    //METODOS REMOTOS
+
     //Recibir mensaje
     @Override
     public void recibirMensaje(Message s, P2PClientInterface cliente, String username) throws java.rmi.RemoteException{
@@ -63,6 +65,8 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         return this.mensajesEnviados.contains(message);
     }
 
+    //METODOS DE LA IMPLEMENTACION DEL CLIENTE
+
     public void setClientId(UUID clientId) {
         this.clientId = clientId;
     }
@@ -72,13 +76,27 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
     }
 
     public void enviarMensaje(String mensaje, String destinatario) throws RemoteException {
-        
+        if(this.amigosConectados.containsKey(destinatario)){
+            Message m = new Message(this.clientId, mensaje);
+            this.mensajesEnviados.add(m);
+            this.amigosConectados.get(destinatario).recibirMensaje(m, this, this.username);
+        }
     }
 
     public ArrayList<String> getOnlineFriends() {
         try {
             return this.amigosConectados.keySet().stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         }catch (Exception e) {
+            System.out.println("Error al obtener los amigos conectados");
+            return new ArrayList<>();
+        }
+    }
+
+    public ArrayList<String> getPendingFriends() {
+        try {
+            return this.server.getSolicitudesPendientes(this.clientId, this.username); 
+        }catch (Exception e) {
+            System.out.println("Error al obtener las solicitudes pendientes");
             return new ArrayList<>();
         }
     }
