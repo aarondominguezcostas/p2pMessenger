@@ -1,12 +1,14 @@
 package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import com.p2pmessenger.client.P2PClientImpl;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -25,24 +27,18 @@ public class Vprincipal extends javax.swing.JFrame {
      * Creates new form principal
      */
     private P2PServerInterface s;
-    private P2PClientInterface c;
+    private P2PClientImpl c;
     private String id;
     private UUID uuidCliente;
     private HashMap<String,P2PClientInterface> amigos;
-    public Vprincipal(P2PServerInterface servidor,P2PClientInterface cliente,String idp, UUID uuid) {
+    public Vprincipal(P2PServerInterface servidor,P2PClientImpl cliente,String idp, UUID uuid) {
         initComponents();
         s=servidor;
         c=cliente;
         id=idp;
         uuidCliente=uuid;
-        try {
-            amigos=s.getAmigosOnline(uuidCliente,id);
-            System.out.println(amigos.keySet());
-        } catch (RemoteException e) {
-            System.out.println("Error obteniendo la lista de amigos.");
-        }
         //Actualizo tabla
-        actualizarTabla(amigos.keySet());
+        actualizarTabla(c.getOnlineFriends());
     }
 
     /**
@@ -54,26 +50,33 @@ public class Vprincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        jMenu1 = new javax.swing.JMenu();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        EscribirMensaje = new javax.swing.JTextArea();
+        BotonEnviar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menu = new javax.swing.JMenu();
         Solicitudes = new javax.swing.JMenuItem();
         NuevoAmigo = new javax.swing.JMenuItem();
 
-        jMenu1.setText("jMenu1");
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tabla.setModel(new tablausuarios());
         jScrollPane1.setViewportView(tabla);
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
+
+        EscribirMensaje.setColumns(20);
+        EscribirMensaje.setRows(5);
+        jScrollPane3.setViewportView(EscribirMensaje);
+
+        BotonEnviar.setText("Enviar");
 
         menu.setText("Menu");
         menu.addActionListener(new java.awt.event.ActionListener() {
@@ -109,19 +112,31 @@ public class Vprincipal extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(BotonEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(BotonEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 59, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold>                         
 
     private void menuActionPerformed(java.awt.event.ActionEvent evt) {                                     
         // TODO add your handling code here:
@@ -143,7 +158,7 @@ public class Vprincipal extends javax.swing.JFrame {
 
    
 
-    public void actualizarTabla(Set conectados) {
+    public void actualizarTabla(ArrayList<String> conectados) {
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.addColumn("Amigos");
        
@@ -156,15 +171,18 @@ public class Vprincipal extends javax.swing.JFrame {
         }
     }
     
+      
     // Variables declaration - do not modify                     
+    private javax.swing.JButton BotonEnviar;
+    private javax.swing.JTextArea EscribirMensaje;
     private javax.swing.JMenuItem NuevoAmigo;
     private javax.swing.JMenuItem Solicitudes;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenu menu;
     private javax.swing.JTable tabla;
-    // End of variables declaration     
+    // End of variables declaration          
 }

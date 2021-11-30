@@ -2,6 +2,8 @@ package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
 import java.util.UUID;
+
+import com.p2pmessenger.client.P2PClientImpl;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -20,8 +22,8 @@ public class Registrarse extends javax.swing.JDialog {
      * Creates new form Registrarse
      */
     private P2PServerInterface s;
-    private P2PClientInterface c;
-    public Registrarse(java.awt.Frame parent,P2PServerInterface servidor,P2PClientInterface cliente) {
+    private P2PClientImpl c;
+    public Registrarse(java.awt.Frame parent,P2PServerInterface servidor,P2PClientImpl cliente) {
         super(parent,false);
         s=servidor;
         c=cliente;

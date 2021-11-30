@@ -31,7 +31,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         try {
 
             // verificar si el usuario ya esta online
-            if (this.onlineClientList.containsKey(id)) {
+            if (this.onlineClientList!= null && this.onlineClientList.containsKey(id)) {
                 return null;
             }
 
@@ -39,9 +39,10 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             if (user.getPassword().equals(password)) {
                 UUID userUUID = UUID.randomUUID();
                 user.setUuid(userUUID);
-                this.updateOnlineList(id, cliente);
                 this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
+
+                this.updateOnlineList(id, cliente);
 
                 return userUUID;
             } else {
@@ -58,6 +59,11 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             throws RemoteException {
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
+
+            if(cliente == null){
+                System.out.println("Error en la interfaz");
+            }
+
             if (user == null) {
                 UUID userUUID = UUID.randomUUID();
                 user = new UserModel(id, contraseña);
@@ -211,8 +217,13 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     private void updateOnlineList(String username, P2PClientInterface cliente) {
         try {
             for (UserModel user : this.usersInfo) {
+                System.out.println(user);
                 if (user.getFriends().contains(username)) {
-                    this.onlineClientList.get(user.getUsername()).newOnlineFriend(username, cliente);
+                    try{
+                        this.onlineClientList.get(user.getUsername()).newOnlineFriend(username, cliente);
+                    }catch(RemoteException e){
+                        System.out.println("Error en el cliente");
+                    }
                 }
             }
         } catch (Exception e) {
