@@ -2,7 +2,7 @@ package com.p2pmessenger.client;
 
 public interface P2PClientInterface extends java.rmi.Remote {
     // Recibir mensaje
-    public void recibirMensaje(Message s, P2PClientInterface cliente) throws java.rmi.RemoteException;
+    public void recibirMensaje(Message s, P2PClientInterface cliente, String username) throws java.rmi.RemoteException;
 
     // Método que permite ao servidor notificar ao cliente a conexión de un novo
     // cliente
