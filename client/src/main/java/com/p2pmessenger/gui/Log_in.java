@@ -177,12 +177,15 @@ public class Log_in extends javax.swing.JDialog {
         UUID lg=null;
         try {
             lg = s.login(c,usuario.getText(),contr.getText());
+
         } catch (RemoteException e) {
             System.out.println("Error iniciando sesión");
         }
         if(lg!= null){
             //Abro ventana de chat
+            this.c.setClientId(lg);
             Vprincipal vp= new Vprincipal(s,c,usuario.getText(),lg);
+            this.c.setWindow(vp);
             vp.setVisible(true);
             //Cerro esta
             this.dispose();

@@ -31,6 +31,7 @@ public class Vprincipal extends javax.swing.JFrame {
     private String id;
     private UUID uuidCliente;
     private HashMap<String,P2PClientInterface> amigos;
+
     public Vprincipal(P2PServerInterface servidor,P2PClientImpl cliente,String idp, UUID uuid) {
         initComponents();
         s=servidor;
@@ -38,6 +39,7 @@ public class Vprincipal extends javax.swing.JFrame {
         id=idp;
         uuidCliente=uuid;
         //Actualizo tabla
+        this.c.updateOnlineFriendList();
         actualizarTabla(c.getOnlineFriends());
     }
 

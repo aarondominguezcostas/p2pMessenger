@@ -42,7 +42,9 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
                 this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
 
+                //aviso a los amigos
                 this.updateOnlineList(id, cliente);
+
 
                 return userUUID;
             } else {
@@ -217,13 +219,9 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     private void updateOnlineList(String username, P2PClientInterface cliente) {
         try {
             for (UserModel user : this.usersInfo) {
-                System.out.println(user);
                 if (user.getFriends().contains(username)) {
-                    try{
-                        this.onlineClientList.get(user.getUsername()).newOnlineFriend(username, cliente);
-                    }catch(RemoteException e){
-                        System.out.println("Error en el cliente");
-                    }
+                    P2PClientInterface clientIf = this.onlineClientList.get(user.getUsername());
+                    clientIf.newOnlineFriend(username, cliente);
                 }
             }
         } catch (Exception e) {

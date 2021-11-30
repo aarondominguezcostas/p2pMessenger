@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.HashMap;
 
 import com.p2pmessenger.server.P2PServerInterface;
+import com.p2pmessenger.gui.Vprincipal;
 
 public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInterface{
     
@@ -16,6 +17,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
     private HashMap<P2PClientInterface,Message> chats;
     private P2PServerInterface server;
     private String username;
+    private Vprincipal window;
 
     protected P2PClientImpl() throws RemoteException {
         super();
@@ -27,6 +29,10 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
 
     public void setServer(P2PServerInterface server) {
         this.server = server;
+    }
+
+    public void setWindow(Vprincipal window) {
+        this.window = window;
     }
 
     //METODOS REMOTOS
@@ -45,8 +51,13 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
     @Override
     public void newOnlineFriend(String username, P2PClientInterface cliente) throws RemoteException {
 
+        if(this.server == null) {
+            throw new RemoteException("Server not set");
+        }
+
         if(this.server.getFriends(this.clientId,this.username).contains(username)){
             this.amigosConectados.put(username,cliente);
+            this.actualizarVistaAmigosOnline(this.getOnlineFriends());
         }
         
     }
@@ -92,6 +103,14 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         }
     }
 
+    public void updateOnlineFriendList(){
+        try{
+            this.amigosConectados = this.server.getAmigosOnline(this.clientId, this.username);
+        }catch (Exception e){
+            System.out.println("Error al obtener los amigos conectados");
+        }
+    }
+
     public ArrayList<String> getPendingFriends() {
         try {
             return this.server.getSolicitudesPendientes(this.clientId, this.username); 
@@ -99,5 +118,9 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             System.out.println("Error al obtener las solicitudes pendientes");
             return new ArrayList<>();
         }
+    }
+
+    public void actualizarVistaAmigosOnline(ArrayList<String> amigosOnline) {
+        this.window.actualizarTabla(amigosOnline);
     }
 }
