@@ -1,6 +1,8 @@
 package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -41,6 +43,7 @@ public class Vprincipal extends javax.swing.JFrame {
         //Actualizo tabla
         this.c.updateOnlineFriendList();
         actualizarTabla(c.getOnlineFriends());
+        jTextArea1.setText("");
     }
 
     /**
@@ -71,6 +74,7 @@ public class Vprincipal extends javax.swing.JFrame {
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
@@ -79,6 +83,11 @@ public class Vprincipal extends javax.swing.JFrame {
         jScrollPane3.setViewportView(EscribirMensaje);
 
         BotonEnviar.setText("Enviar");
+        BotonEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonEnviarActionPerformed(evt);
+            }
+        });
 
         menu.setText("Menu");
         menu.addActionListener(new java.awt.event.ActionListener() {
@@ -138,7 +147,8 @@ public class Vprincipal extends javax.swing.JFrame {
         );
 
         pack();
-    }// </editor-fold>                         
+    }// </editor-fold>                        
+                     
 
     private void menuActionPerformed(java.awt.event.ActionEvent evt) {                                     
         // TODO add your handling code here:
@@ -157,6 +167,39 @@ public class Vprincipal extends javax.swing.JFrame {
         na.setVisible(true);
     }                                          
 
+    private void BotonEnviarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+        //Envío mensaje
+        String mensaje=EscribirMensaje.getText();
+        EscribirMensaje.setText("");//vacío casilla donde escribo a mensaxe
+        c.enviarMensaje(mensaje,tabla.getValueAt(tabla.getSelectedRow(),0).toString());
+        //O introduzco no jtext
+        String m="";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+        m=m+dtf.format(LocalDateTime.now());
+        m=m+" "+c.getUsername()+"   ";
+        m=m+mensaje;
+        jTextArea1.setText(jTextArea1.getText()+"\n-----------------------------------\n"+m);
+
+        //DUDA---->Si hai erro ao enviar habría que mostralo na GUI?
+
+
+
+
+    } 
+
+    //Código para actualizar o chat
+    public void MensajeRecibido(String emisor,String s){
+        //si a columna seleccionada corresponde co mensaje recibido a actualizamos
+        if(tabla.getValueAt(tabla.getSelectedRow(),0).toString().equals(s)){
+            String m="";
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+            m=m+dtf.format(LocalDateTime.now());
+            m=m+" "+emisor+"   ";
+            m=m+s;
+            jTextArea1.setText(jTextArea1.getText()+"\n-----------------------------------\n"+m);
+        }
+    }
 
    
 

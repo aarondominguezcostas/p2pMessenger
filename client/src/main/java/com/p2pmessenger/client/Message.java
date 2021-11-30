@@ -19,6 +19,11 @@ public class Message {
     public String getMessage() {
         return message;
     }
+    
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 
     @Override
     public boolean equals(Object obj) {

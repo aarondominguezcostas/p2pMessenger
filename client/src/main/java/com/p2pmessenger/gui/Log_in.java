@@ -184,6 +184,7 @@ public class Log_in extends javax.swing.JDialog {
         if(lg!= null){
             //Abro ventana de chat
             this.c.setClientId(lg);
+            this.c.setUsername(usuario.getText());
             Vprincipal vp= new Vprincipal(s,c,usuario.getText(),lg);
             this.c.setWindow(vp);
             vp.setVisible(true);

@@ -16,9 +16,11 @@ public class Client {
             int RMIPort;         
             String hostName;
             System.out.println("Enter the RMIRegistry host namer:");
-            hostName = br.readLine();
+            //hostName = br.readLine();
+            hostName="localhost";
             System.out.println("Enter the RMIregistry port number:");
-            String portNum = br.readLine();
+            //String portNum = br.readLine();
+            String portNum="1099";
             RMIPort = Integer.parseInt(portNum); 
             String registryURL = "rmi://localhost:" + portNum + "/mainServer";
             //Busco servidor
@@ -32,13 +34,18 @@ public class Client {
             //ELEGIR Iniciar sesión o Registrarse
             String nick,contr;
             System.out.println("(a)Iniciar Sesión\n(b)Registrarse");
-            String op=br.readLine();
+            //String op=br.readLine();
             //System.out.println("Introduzca el nombre de usuario:");
             /*nick=br.readLine();
             System.out.println("Introduzca la contraseña:");
             contr=br.readLine();*/
             //Usuario u=new Usuario(nick,contr,callbackObj);
 
+
+            Log_in vlogin=new Log_in(null,s,(P2PClientImpl)callbackObj);
+            vlogin.setVisible(true);
+
+/*
             if(op.equals("a")){
                 //Registro conexión cliente
                 //s.registrarConexion(callbackObj);
@@ -52,7 +59,7 @@ public class Client {
             }
             else{
                 System.out.println("Opción no válida");
-            }
+            }*/
 
             //RECIBIR PETICIÓNS DE AMISTAD PENDIENTES
 
