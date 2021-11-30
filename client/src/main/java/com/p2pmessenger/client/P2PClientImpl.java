@@ -5,7 +5,6 @@ import java.rmi.*;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.HashMap;
-import java.util.Set;
 
 import com.p2pmessenger.server.P2PServerInterface;
 
@@ -76,7 +75,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         
     }
 
-    public Set<String> getOnlineFriends() throws RemoteException {
-        return this.amigosConectados.keySet();
+    public ArrayList<String> getOnlineFriends() throws RemoteException {
+        return this.amigosConectados.keySet().stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
     }
 }
