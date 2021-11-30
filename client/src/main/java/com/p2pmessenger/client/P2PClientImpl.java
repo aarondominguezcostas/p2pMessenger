@@ -75,7 +75,11 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         
     }
 
-    public ArrayList<String> getOnlineFriends() throws RemoteException {
-        return this.amigosConectados.keySet().stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+    public ArrayList<String> getOnlineFriends() {
+        try {
+            return this.amigosConectados.keySet().stream().collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        }catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 }
