@@ -1,15 +1,20 @@
 package com.p2pmessenger.gui;
 
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import com.p2pmessenger.client.MensajeChat;
 import com.p2pmessenger.client.Message;
 import com.p2pmessenger.client.P2PClientImpl;
+import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
 /*
@@ -30,6 +35,7 @@ public class Vprincipal extends javax.swing.JFrame {
     private P2PClientImpl c;
     private String id;
     private UUID uuidCliente;
+    private HashMap<String,P2PClientInterface> amigos;
 
     public Vprincipal(P2PServerInterface servidor,P2PClientImpl cliente,String idp, UUID uuid) {
         initComponents();
@@ -229,7 +235,13 @@ public class Vprincipal extends javax.swing.JFrame {
    
 
     public void actualizarTabla(ArrayList<String> conectados) {
-        DefaultTableModel modelo = new DefaultTableModel();
+        DefaultTableModel modelo = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+            //all cells false
+            return false;
+            }
+        };
         modelo.addColumn("Amigos");
        
         for(Object s:conectados){
