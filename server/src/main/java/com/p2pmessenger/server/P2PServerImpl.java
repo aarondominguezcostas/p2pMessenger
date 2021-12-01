@@ -31,7 +31,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         try {
 
             // verificar si el usuario ya esta online
-            if (this.onlineClientList!= null && this.onlineClientList.containsKey(id)) {
+            if (this.onlineClientList != null && this.onlineClientList.containsKey(id)) {
                 return null;
             }
 
@@ -42,9 +42,8 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
                 this.usersInfo.add(user);
                 this.onlineClientList.put(id, cliente);
 
-                //aviso a los amigos
+                // aviso a los amigos
                 this.updateOnlineList(id, cliente);
-
 
                 return userUUID;
             } else {
@@ -62,7 +61,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         try {
             UserModel user = this.daoUsers.getUserByUsername(id);
 
-            if(cliente == null){
+            if (cliente == null) {
                 System.out.println("Error en la interfaz");
             }
 
@@ -117,6 +116,31 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
                 if (user.getUuid().equals(clienteId)) {
                     client = user;
                     this.daoUsers.acceptFriendRequest(idAceptado, idAceptante);
+                    break;
+                }
+            }
+
+            if (client != null) {
+                this.updateUserInfo(client.getUsername());
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al aceptar solicitud: " + e.toString());
+        }
+
+    }
+
+    @Override
+    public synchronized void rechazarSolicitud(String idRechazante, UUID clienteId, String idRechazado)
+            throws RemoteException {
+        try {
+
+            UserModel client = null;
+
+            for (UserModel user : this.usersInfo) {
+                if (user.getUuid().equals(clienteId)) {
+                    client = user;
+                    this.daoUsers.rejectFriendRequest(idRechazado, idRechazante);
                     break;
                 }
             }
@@ -199,7 +223,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
     @Override
     public ArrayList<String> getFriends(UUID clientUuid, String idCliente)
             throws java.rmi.RemoteException {
-                
+
         for (UserModel user : this.usersInfo) {
             if (user.getUuid().equals(clientUuid)) {
                 return user.getFriends();
