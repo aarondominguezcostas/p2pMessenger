@@ -113,7 +113,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             try {
                 this.amigosConectados.get(destinatario).recibirMensaje(m, this, this.username);
                 //gardo o meu propio mensaje para poder mostralo por pantalla si cambio de chat e volvo
-                //this.chats.get(destinatario).add(new MensajeChat(this.username,mensaje,m.getTimestamp()));
+                this.chats.get(destinatario).add(new MensajeChat(this.username,mensaje,m.getTimestamp()));
 
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block

@@ -1,6 +1,7 @@
 package com.p2pmessenger.gui;
 
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import com.p2pmessenger.client.MensajeChat;
 import com.p2pmessenger.client.P2PClientImpl;
 import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
@@ -70,6 +72,11 @@ public class Vprincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tabla.setModel(new tablausuarios());
+        tabla.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabla);
 
         jTextArea1.setEditable(false);
@@ -148,11 +155,32 @@ public class Vprincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>                        
-                     
+  
 
     private void menuActionPerformed(java.awt.event.ActionEvent evt) {                                     
         // TODO add your handling code here:
     }                                    
+
+    //detctar que cambiou o amigo seleccionado
+    private void tablaMouseClicked(java.awt.event.MouseEvent evt) {                                   
+        // TODO add your handling code here:
+        //Pedimos a implementación do cliente o chat correspondiente
+        ArrayList<MensajeChat> chat= c.getChat(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
+        String conc="";
+        //Actualizo o jText co formato correcto en cada mensaje
+        String m="";
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
+        for(int i=0;i<chat.size();i++){
+            conc=conc+sdf1.format(chat.get(i).getTimestamp());
+            conc=conc+" "+chat.get(i).getUsername()+"   ";
+            conc=conc+chat.get(i).getMensaje()+"\n-----------------------------------\n";
+            
+        }
+        jTextArea1.setText(conc);
+    }                                  
+
 
     private void SolicitudesActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
@@ -179,7 +207,7 @@ public class Vprincipal extends javax.swing.JFrame {
         m=m+dtf.format(LocalDateTime.now());
         m=m+" "+c.getUsername()+"   ";
         m=m+mensaje;
-        jTextArea1.setText(jTextArea1.getText()+"\n-----------------------------------\n"+m);
+        jTextArea1.setText(jTextArea1.getText()+m+"\n-----------------------------------\n");
 
         //DUDA---->Si hai erro ao enviar habría que mostralo na GUI?
 
@@ -199,7 +227,7 @@ public class Vprincipal extends javax.swing.JFrame {
             m=m+dtf.format(LocalDateTime.now());
             m=m+" "+emisor+"   ";
             m=m+s;
-            jTextArea1.setText(jTextArea1.getText()+"\n-----------------------------------\n"+m);
+            jTextArea1.setText(jTextArea1.getText()+m+"\n-----------------------------------\n");
         }
     }
 
