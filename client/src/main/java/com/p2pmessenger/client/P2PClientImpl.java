@@ -14,7 +14,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
     private HashMap<String, P2PClientInterface> amigosConectados;
     private UUID clientId;  
     private ArrayList<Message> mensajesEnviados;
-    private HashMap<String,ArrayList<MensajeChat>> chats;
+    private HashMap<String,ArrayList<Message>> chats;
     private P2PServerInterface server;
     private String username;
     private Vprincipal window;
@@ -50,7 +50,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             //Añado o mensaje recibido ao chat
             System.out.println("\n"+username+"\n");
             System.out.println("\n\n"+this.chats.get(username).size()+"\n\n");
-            this.chats.get(username).add(new MensajeChat(username,s.getMessage(),s.getTimestamp()));
+            this.chats.get(username).add(s);
             //notifico a ventana e ela se encarga de mostralo si o amigo seleccionado é o receptor
             window.MensajeRecibido(username, s.getMessage());
         }
@@ -68,7 +68,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         if(this.server.getFriends(this.clientId,this.username).contains(username)){
             this.amigosConectados.put(username,cliente);
             //Creo o chat, vacío de momento
-            ArrayList<MensajeChat> c=new ArrayList<MensajeChat>();
+            ArrayList<Message> c=new ArrayList<Message>();
             this.chats.put(username,c);
             this.actualizarVistaAmigosOnline(this.getOnlineFriends());
             
@@ -104,20 +104,19 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
 
     public void enviarMensaje(String mensaje, String destinatario){
         if(this.amigosConectados.containsKey(destinatario)){
-            Message m = new Message(this.clientId, mensaje);
+            Message m = new Message(this.clientId, mensaje, this.username);
 
-
-            //MOVER a despois do catch mellor??????
             this.mensajesEnviados.add(m);
             
             try {
                 this.amigosConectados.get(destinatario).recibirMensaje(m, this, this.username);
                 //gardo o meu propio mensaje para poder mostralo por pantalla si cambio de chat e volvo
-                this.chats.get(destinatario).add(new MensajeChat(this.username,mensaje,m.getTimestamp()));
+                this.chats.get(destinatario).add(m);
 
             } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 System.out.println("Error enviando mensaje:"+e.toString());
+                this.mensajesEnviados.remove(m);
             }
         }
     }
@@ -128,7 +127,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             for (String a : this.amigosConectados.keySet()){
                 if(this.chats.get(a)==null){
                     //Creo o chat, vacío de momento
-                    ArrayList<MensajeChat> c=new ArrayList<MensajeChat>();
+                    ArrayList<Message> c=new ArrayList<Message>();
                     this.chats.put(a,c);
                 }
             }
@@ -146,7 +145,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             for (String a : this.amigosConectados.keySet()){
                 if(this.chats.get(a)==null){
                     //Creo o chat, vacío de momento
-                    ArrayList<MensajeChat> c=new ArrayList<MensajeChat>();
+                    ArrayList<Message> c=new ArrayList<Message>();
                     this.chats.put(a,c);
                 }
             }
@@ -164,7 +163,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             return new ArrayList<>();
         }
     }
-    public ArrayList<MensajeChat> getChat(String username){
+    public ArrayList<Message> getChat(String username){
         return chats.get(username);
     }
 

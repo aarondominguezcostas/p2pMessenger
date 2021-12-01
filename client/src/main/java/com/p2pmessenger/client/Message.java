@@ -8,9 +8,11 @@ public class Message implements Serializable{
     private UUID senderUUID;
     private String message;
     private Timestamp timestamp;
+    private String sender;
 
     // constructor
-    public Message(UUID senderUUID, String message) {
+    public Message(UUID senderUUID, String message, String name) {
+        this.sender = name;
         this.senderUUID = senderUUID;
         this.message = message;
         this.timestamp = new Timestamp(System.currentTimeMillis());
@@ -21,6 +23,9 @@ public class Message implements Serializable{
         return message;
     }
     
+    public String getSender() {
+        return sender;
+    }
 
     public Timestamp getTimestamp() {
         return timestamp;

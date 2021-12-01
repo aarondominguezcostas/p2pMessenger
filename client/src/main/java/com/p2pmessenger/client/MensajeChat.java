@@ -1,6 +1,5 @@
 package com.p2pmessenger.client;
 
-import java.util.UUID;
 import java.sql.Timestamp;
 
 public class MensajeChat {

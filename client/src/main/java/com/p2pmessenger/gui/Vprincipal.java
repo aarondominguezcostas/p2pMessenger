@@ -1,19 +1,15 @@
 package com.p2pmessenger.gui;
 
-import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.UUID;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import com.p2pmessenger.client.MensajeChat;
+import com.p2pmessenger.client.Message;
 import com.p2pmessenger.client.P2PClientImpl;
-import com.p2pmessenger.client.P2PClientInterface;
 import com.p2pmessenger.server.P2PServerInterface;
 
 /*
@@ -34,7 +30,6 @@ public class Vprincipal extends javax.swing.JFrame {
     private P2PClientImpl c;
     private String id;
     private UUID uuidCliente;
-    private HashMap<String,P2PClientInterface> amigos;
 
     public Vprincipal(P2PServerInterface servidor,P2PClientImpl cliente,String idp, UUID uuid) {
         initComponents();
@@ -165,7 +160,7 @@ public class Vprincipal extends javax.swing.JFrame {
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {                                   
         // TODO add your handling code here:
         //Pedimos a implementación do cliente o chat correspondiente
-        ArrayList<MensajeChat> chat= c.getChat(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
+        ArrayList<Message> chat= c.getChat(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
         String conc="";
         //Actualizo o jText co formato correcto en cada mensaje
         String m="";
@@ -174,8 +169,8 @@ public class Vprincipal extends javax.swing.JFrame {
 
         for(int i=0;i<chat.size();i++){
             conc=conc+sdf1.format(chat.get(i).getTimestamp());
-            conc=conc+" "+chat.get(i).getUsername()+"   ";
-            conc=conc+chat.get(i).getMensaje()+"\n-----------------------------------\n";
+            conc=conc+" "+chat.get(i).getSender()+"   ";
+            conc=conc+chat.get(i).getMessage()+"\n-----------------------------------\n";
             
         }
         jTextArea1.setText(conc);

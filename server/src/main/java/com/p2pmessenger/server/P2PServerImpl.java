@@ -36,7 +36,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             }
 
             UserModel user = this.daoUsers.getUserByUsername(id);
-            if (user.getPassword().equals(password)) {
+            if (user != null && user.getPassword().equals(password)) {
                 UUID userUUID = UUID.randomUUID();
                 user.setUuid(userUUID);
                 this.usersInfo.add(user);
@@ -88,6 +88,7 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
             throws RemoteException {
         try {
             UserModel client = null;
+
             for (UserModel user : this.usersInfo) {
                 if (user.getUuid().equals(clienteId)) {
                     client = user;
