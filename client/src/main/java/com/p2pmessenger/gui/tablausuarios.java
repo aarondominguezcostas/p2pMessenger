@@ -37,8 +37,6 @@ public class tablausuarios extends AbstractTableModel {
 
     @Override
     public Class getColumnClass(int columnNumber) {
-        Class clase = null;
-
         return java.lang.String.class;
     }
 
