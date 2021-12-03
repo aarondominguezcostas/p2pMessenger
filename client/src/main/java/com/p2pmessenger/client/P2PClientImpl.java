@@ -94,14 +94,17 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
 
     //METODOS DE LA IMPLEMENTACION DEL CLIENTE
 
+    //devuelve el UUID del cliente
     public void setClientId(UUID clientId) {
         this.clientId = clientId;
     }
 
+    //devuelve el servidor
     public P2PServerInterface getServer() {
         return server;
     }
 
+    //envia un mensaje al destinatario
     public void enviarMensaje(String mensaje, String destinatario){
         if(this.amigosConectados.containsKey(destinatario)){
             Message m = new Message(this.clientId, mensaje, this.username);
@@ -121,6 +124,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         }
     }
 
+    //devuelve una lista de amigos conectados
     public ArrayList<String> getOnlineFriends() {
         try {
             //creo chat para eles
@@ -138,6 +142,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         }
     }
 
+    //actualiza la lista de amigos conectados
     public void updateOnlineFriendList(){
         try{
             this.amigosConectados = this.server.getAmigosOnline(this.clientId, this.username);
@@ -155,6 +160,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         }
     }
 
+    //devuelve un arraylist de  la lista pendiente de amigos
     public ArrayList<String> getPendingFriends() {
         try {
             return this.server.getSolicitudesPendientes(this.clientId, this.username); 
@@ -163,16 +169,38 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             return new ArrayList<>();
         }
     }
+
+    //devuelve el chat especifico para un amigo
     public ArrayList<Message> getChat(String username){
         return chats.get(username);
     }
 
+    //actualiza los amigos conectados en la ventana principal
     public void actualizarVistaAmigosOnline(ArrayList<String> amigosOnline) {
         this.window.actualizarTabla(amigosOnline);
     }
 
+    //devuelve el nombre de usuario 
     public String getUsername() {
         return username;
+    }
+
+    //añadir amigo a partir de su nombre de usuario
+    public void addAmigo(String idNewAmigo){
+        try {
+            this.server.aceptarSolicitud(this.username, this.clientId, idNewAmigo);;
+        }catch (Exception e) {
+            System.out.println("Error al añadir amigo");
+        }
+    }
+
+    //solicitar amistad 
+    public void sendRequest(String idNewAmigo){
+        try {
+            this.server.solicitarAmistad(idNewAmigo, this.clientId, this.username);
+        }catch (Exception e) {
+            System.out.println("Error al solicitar amistad");
+        }
     }
 
 }

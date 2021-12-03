@@ -1,18 +1,13 @@
 package com.p2pmessenger.gui;
 
-import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import com.p2pmessenger.client.Message;
 import com.p2pmessenger.client.P2PClientImpl;
-import com.p2pmessenger.client.P2PClientInterface;
-import com.p2pmessenger.server.P2PServerInterface;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -28,18 +23,11 @@ public class Vprincipal extends javax.swing.JFrame {
     /**
      * Creates new form principal
      */
-    private P2PServerInterface s;
     private P2PClientImpl c;
-    private String id;
-    private UUID uuidCliente;
-    private HashMap<String,P2PClientInterface> amigos;
 
-    public Vprincipal(P2PServerInterface servidor,P2PClientImpl cliente,String idp, UUID uuid) {
+    public Vprincipal(P2PClientImpl cliente) {
         initComponents();
-        s=servidor;
         c=cliente;
-        id=idp;
-        uuidCliente=uuid;
         //Actualizo tabla
         this.c.updateOnlineFriendList();
         actualizarTabla(c.getOnlineFriends());
@@ -164,8 +152,6 @@ public class Vprincipal extends javax.swing.JFrame {
         //Pedimos a implementación do cliente o chat correspondiente
         ArrayList<Message> chat= c.getChat(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
         String conc="";
-        //Actualizo o jText co formato correcto en cada mensaje
-        String m="";
 
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
@@ -178,22 +164,20 @@ public class Vprincipal extends javax.swing.JFrame {
         jTextArea1.setText(conc);
     }                                  
 
-
+    //abnir ventana de solicitudes
     private void SolicitudesActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
-        System.out.println("Chega");
-        Solicitudes vsol= new Solicitudes(this,s,c,id,uuidCliente);
+        Solicitudes vsol= new Solicitudes(this,c);
         vsol.setVisible(true);
     }                                           
 
+    //abrir ventana de nuevo amigo
     private void NuevoAmigoActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // TODO add your handling code here:
-        NewAmigo na=new NewAmigo(this,s,c,id,uuidCliente);
+        NewAmigo na=new NewAmigo(this,c);
         na.setVisible(true);
     }                                          
 
+    //enviar mensaje
     private void BotonEnviarActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO add your handling code here:
         //Envío mensaje
         String mensaje=EscribirMensaje.getText();
         EscribirMensaje.setText("");//vacío casilla donde escribo a mensaxe
@@ -207,10 +191,6 @@ public class Vprincipal extends javax.swing.JFrame {
         jTextArea1.setText(jTextArea1.getText()+m+"\n-----------------------------------\n");
 
         //DUDA---->Si hai erro ao enviar habría que mostralo na GUI?
-
-
-
-
     } 
 
     //Código para actualizar o chat

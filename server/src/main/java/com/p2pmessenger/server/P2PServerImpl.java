@@ -88,6 +88,10 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
         try {
             UserModel client = null;
 
+            if(idDestinatario == idCliente) {
+                return;
+            }
+
             for (UserModel user : this.usersInfo) {
                 if (user.getUuid().equals(clienteId)) {
                     client = user;
@@ -98,6 +102,10 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
 
             if (client != null) {
                 this.updateUserInfo(client.getUsername());
+
+                if(this.onlineClientList.containsKey(idDestinatario)){
+                    this.updateUserInfo(idDestinatario);
+                }
             }
 
         } catch (Exception e) {
@@ -122,6 +130,15 @@ public class P2PServerImpl extends UnicastRemoteObject implements P2PServerInter
 
             if (client != null) {
                 this.updateUserInfo(client.getUsername());
+
+                if(this.onlineClientList.containsKey(idAceptado)){
+                    this.updateUserInfo(idAceptado);
+
+                    //si los dos estan en linea, actualizo sus estados en linea
+                    this.onlineClientList.get(idAceptado).newOnlineFriend(idAceptante, this.onlineClientList.get(idAceptante));
+                    this.onlineClientList.get(idAceptante).newOnlineFriend(idAceptado, this.onlineClientList.get(idAceptado));
+
+                }
             }
 
         } catch (Exception e) {

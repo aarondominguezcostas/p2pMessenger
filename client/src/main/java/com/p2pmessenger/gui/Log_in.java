@@ -8,11 +8,6 @@ import javax.swing.UIManager;
 import com.p2pmessenger.client.P2PClientImpl;
 import com.p2pmessenger.server.P2PServerInterface;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
- */
-
 /**
  *
  * @author ecl
@@ -183,18 +178,13 @@ public class Log_in extends javax.swing.JDialog {
             //Abro ventana de chat
             this.c.setClientId(lg);
             this.c.setUsername(usuario.getText());
-            Vprincipal vp= new Vprincipal(s,c,usuario.getText(),lg);
+            Vprincipal vp= new Vprincipal(c);
             this.c.setWindow(vp);
             vp.setVisible(true);
             //Cerro esta
             this.dispose();
         }
     }//GEN-LAST:event_Insesion1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Insesion1;

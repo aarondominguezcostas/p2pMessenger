@@ -155,7 +155,7 @@ public class Registrarse extends javax.swing.JDialog {
                 //correcta abro ventana de chat
                 this.c.setClientId(sg);
                 this.c.setUsername(usuario.getText());
-                Vprincipal vp= new Vprincipal(s,c,usuario.getText(),sg);
+                Vprincipal vp= new Vprincipal(c);
                 this.c.setWindow(vp);
                 vp.setVisible(true);
                 //cerro a actual

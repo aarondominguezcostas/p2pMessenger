@@ -38,16 +38,24 @@ public class DAOUsers {
         UserModel user = new UserModel(userDoc.getString("username"), userDoc.getString("password"));
 
         if (userDoc.get("friendList") != null) {
-            user.setFriends(new ArrayList<String>(
-                    Arrays.asList(userDoc.get("friendList").toString().replace("[", "").replace("]", "")
-                            .replaceAll("\\s+", "").split(","))));
+            ArrayList<String> friendList = new ArrayList<>(
+                Arrays.asList(userDoc.get("friendList").toString().replace("[", "").replace("]", "")
+                        .replaceAll("\\s+", "").split(",")));
+            if("".equals(friendList.get(0))) {
+                friendList.remove(0);
+            }
+            user.setFriends(friendList);   
         } else {
             user.setFriends(new ArrayList<String>());
         }
         if (userDoc.get("pendingFriend") != null) {
-            user.setPendingFriends(new ArrayList<String>(Arrays
-                    .asList(userDoc.get("pendingFriend").toString().replace("[", "").replace("]", "")
-                            .replaceAll("\\s+", "").split(","))));
+            ArrayList<String> pendingFriend = new ArrayList<String>(Arrays
+            .asList(userDoc.get("pendingFriend").toString().replace("[", "").replace("]", "")
+                    .replaceAll("\\s+", "").split(",")));
+            if("".equals(pendingFriend.get(0))) {
+                pendingFriend.remove(0);
+            }
+            user.setPendingFriends(pendingFriend);
         } else {
             user.setPendingFriends(new ArrayList<String>());
         }
@@ -86,6 +94,16 @@ public class DAOUsers {
                 this.acceptFriendRequest(username2, username1);
             } else {
                 ArrayList<String> friendsList = user2.getPendingFriends();
+
+                for(String friend : friendsList) {
+                    if(friend.equals("")) {
+                        friendsList.remove(friend);
+                    }
+                }
+
+                if(friendsList.isEmpty()) {
+                    friendsList = new ArrayList<String>();
+                }
                 friendsList.add(username1);
 
                 collection.updateOne(eq("username", username2),
