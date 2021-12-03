@@ -104,12 +104,7 @@ public class Solicitudes extends javax.swing.JDialog {
 
     //rechazar la solicitud seleccionada
     private void rechazarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechazarActionPerformed
-        // TODO add your handling code here:
-        /*try{
-        //s.rechazarSolicitud(this.id,this.c,tabla.getValueAt(tabla.getSelectedRow(), 0));
-        } catch (RemoteException e) {
-            System.out.println("Error rechazando solicitud")
-        }*/
+        c.rejectFriendRequest((String)tabla.getValueAt(tabla.getSelectedRow(), 0));
     }//GEN-LAST:event_rechazarActionPerformed
 
 
