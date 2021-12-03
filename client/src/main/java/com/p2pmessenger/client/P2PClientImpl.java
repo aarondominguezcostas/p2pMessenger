@@ -203,4 +203,13 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
         }
     }
 
+    //rechazar amistad
+    public void rejectFriendRequest(String idRechazado){
+        try {
+            this.server.rechazarSolicitud(this.username, this.clientId, idRechazado);
+        }catch (Exception e) {
+            System.out.println("Error al rechazar amistad");
+        }
+    }
+
 }

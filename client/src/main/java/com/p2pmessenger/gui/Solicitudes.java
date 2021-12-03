@@ -104,7 +104,7 @@ public class Solicitudes extends javax.swing.JDialog {
 
     //rechazar la solicitud seleccionada
     private void rechazarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechazarActionPerformed
-        c.rejectFriendRequest((String)tabla.getValueAt(tabla.getSelectedRow(), 0));
+        this.c.rejectFriendRequest((String)tabla.getValueAt(tabla.getSelectedRow(), 0));
     }//GEN-LAST:event_rechazarActionPerformed
 
 
@@ -112,7 +112,7 @@ public class Solicitudes extends javax.swing.JDialog {
     private void aceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarActionPerformed
 
         System.out.println("Aceptado"+(String)tabla.getValueAt(tabla.getSelectedRow(), 0));
-        c.addAmigo((String)tabla.getValueAt(tabla.getSelectedRow(), 0));
+        this.c.addAmigo((String)tabla.getValueAt(tabla.getSelectedRow(), 0));
 
         this.actualizarTabla(c.getPendingFriends());
     }
