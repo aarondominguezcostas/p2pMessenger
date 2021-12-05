@@ -94,7 +94,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
 
     //METODOS DE LA IMPLEMENTACION DEL CLIENTE
 
-    //devuelve el UUID del cliente
+    //establece el UUID del cliente
     public void setClientId(UUID clientId) {
         this.clientId = clientId;
     }
@@ -211,5 +211,16 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             System.out.println("Error al rechazar amistad");
         }
     }
+
+    //Desconectarse
+    public void disconnect(){
+        try {
+            this.server.logout(this.clientId, this.username);
+        } catch (RemoteException e) {
+            // TODO Auto-generated catch block
+            System.out.println("Error desconectándose:"+e.toString());
+        }
+    }
+    
 
 }

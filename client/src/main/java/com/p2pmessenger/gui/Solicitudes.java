@@ -105,6 +105,7 @@ public class Solicitudes extends javax.swing.JDialog {
     //rechazar la solicitud seleccionada
     private void rechazarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechazarActionPerformed
         this.c.rejectFriendRequest((String)tabla.getValueAt(tabla.getSelectedRow(), 0));
+        this.actualizarTabla(c.getPendingFriends());
     }//GEN-LAST:event_rechazarActionPerformed
 
 
