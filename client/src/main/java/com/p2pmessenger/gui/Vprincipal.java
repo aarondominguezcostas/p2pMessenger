@@ -204,6 +204,11 @@ public class Vprincipal extends javax.swing.JFrame {
         //Envío mensaje
         String mensaje=EscribirMensaje.getText();
         EscribirMensaje.setText("");//vacío casilla donde escribo a mensaxe
+        try{
+            tabla.getValueAt(tabla.getSelectedRow(),0).toString();
+        }catch(Exception e){
+            return;
+        }
         c.enviarMensaje(mensaje,tabla.getValueAt(tabla.getSelectedRow(),0).toString());
         //O introduzco no jtext
         String m="";
@@ -249,6 +254,9 @@ public class Vprincipal extends javax.swing.JFrame {
         tabla.setModel((TableModel) modelo);
         if (modelo.getRowCount() > 0) {
             tabla.setRowSelectionInterval(0, 0);
+            this.tablaMouseClicked(null);
+        }else{
+            jTextArea1.setText("");
         }
     }
     
