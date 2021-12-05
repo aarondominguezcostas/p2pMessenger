@@ -83,6 +83,7 @@ public class P2PClientImpl extends UnicastRemoteObject implements P2PClientInter
             this.amigosConectados.remove(username);
             //elimino o chat
             this.chats.remove(username);
+            this.actualizarVistaAmigosOnline(this.getOnlineFriends());
         }
     }
 

@@ -23,8 +23,6 @@ public class DAOUsers {
         mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("p2pdb");
         collection = database.getCollection("users");
-
-        System.out.println("Conectado a base de datos: " + collection.countDocuments());
     }
 
     public UserModel getUserByUsername(String username) {

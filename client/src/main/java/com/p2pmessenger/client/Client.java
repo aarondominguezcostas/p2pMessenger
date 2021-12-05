@@ -17,8 +17,6 @@ public class Client {
             Log_in vlogin=new Log_in(null,s,(P2PClientImpl)callbackObj);
             vlogin.setVisible(true);
 
-
-
         }
         catch(Exception e){
             System.out.println("Error en callback client");

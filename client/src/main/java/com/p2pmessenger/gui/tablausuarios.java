@@ -4,8 +4,6 @@ package com.p2pmessenger.gui;
  * @author ecl
  */
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 /**
