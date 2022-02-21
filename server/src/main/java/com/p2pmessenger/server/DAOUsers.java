@@ -18,7 +18,7 @@ public class DAOUsers {
     public DAOUsers() {
         // Conexion a la base de datos
         ConnectionString connectionString = new ConnectionString(
-                "mongodb+srv://dbadmin:rZ9vnPsmch3T7z7R@p2puserdatabase.lzdps.mongodb.net/p2pdb?retryWrites=true&w=majority");
+                DB_URL);
         MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).build();
         mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("p2pdb");
